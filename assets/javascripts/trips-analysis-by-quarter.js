@@ -14,54 +14,55 @@ function setGraph(data){
     x.domain(d3.extent(data, function(d) { return +d.tod; } ));
     y.domain([0, .1]);
 
-    const lines = [
+    const weekday = [
         d3.line()
             .x(function(d) { return x(+d.tod); })
             .y(function(d) { return y(+d.proportion_q2_2019_wd) }),
         d3.line()
-            .x(function(d) { return x(+d.tod); })
-            .y(function(d) { return y(+d.proportion_q2_2019_wnd); }),
+            .x(function(d) { return x(+d.tod); })
+            .y(function(d) { return y(+d.proportion_q2_2018_wd); }),
         d3.line()
             .x(function(d) { return x(+d.tod); })
             .y(function(d) { return y(+d.proportion_q1_2019_wd); }),
         d3.line()
             .x(function(d) { return x(+d.tod); })
-            .y(function(d) { return y(+d.proportion_q1_2019_wnd); }),
-        d3.line()
-            .x(function(d) { return x(+d.tod); })
             .y(function(d) { return y(+d.proportion_q4_2018_wd); }),
+        d3.line()
+            .x(function(d) { return x(+d.tod); })
+            .y(function(d) { return y(+d.proportion_q3_2018_wd); })]
+    const weekend = [
         d3.line()
             .x(function(d) { return x(+d.tod); })
             .y(function(d) { return y(+d.proportion_q4_2018_wnd); }),
         d3.line()
-            .x(function(d) { return x(+d.tod); })
-            .y(function(d) { return y(+d.proportion_q3_2018_wd); }),        
+            .x(function(d) { return x(+d.tod); })
+            .y(function(d) { return y(+d.proportion_q2_2019_wnd); }),
+        d3.line()
+            .x(function(d) { return x(+d.tod); })
+            .y(function(d) { return y(+d.proportion_q1_2019_wnd); }),  
         d3.line()
             .x(function(d) { return x(+d.tod); })
             .y(function(d) { return y(+d.proportion_q3_2018_wnd); }),        
         d3.line()
             .x(function(d) { return x(+d.tod); })
-            .y(function(d) { return y(+d.proportion_q2_2018_wd); }),
-        d3.line()
-            .x(function(d) { return x(+d.tod); })
             .y(function(d) { return y(+d.proportion_q2_2018_wnd); })
     ]
 
+    const colors = ["red","yellow","blue","purple","green"]
     const svg = d3.select(".trips-analysis-by-quarter")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-    lines.forEach(line => {
+    let i = 0
+    weekday.forEach(line => {
         svg.append("path")
           .data([data])
           .attr("class", "line")
           .attr("d",line)
           .attr("fill","none")
-          .attr("stroke","red")
+          .attr("stroke",colors[i++])
     })
-    
     svg.append("g")
         .attr("transform", `translate(0, ${height})`)
         .call(d3.axisBottom(x))
