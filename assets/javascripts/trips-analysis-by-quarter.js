@@ -1,4 +1,4 @@
-d3.csv("/assets/data/trips_simplified.csv").then( data => {
+d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
     //X AXIS: yr_qtr (ex: trip_q4_2018)
     //Y AXIS: total_count (ex: 4093)
     console.log(data)
@@ -18,7 +18,7 @@ d3.csv("/assets/data/trips_simplified.csv").then( data => {
         .range([0, width])
         .padding(0.1)
     
-    x.domain(data.map( d => { return +d.yr_qtr}))
+    x.domain(data.map( d => { return d.yr_qtr}))
 
     var y = d3.scaleLinear()
         .range([height, 0])
