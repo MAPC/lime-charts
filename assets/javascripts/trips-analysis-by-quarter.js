@@ -4,8 +4,8 @@ d3.csv("/assets/data/tod_quarter_dow.csv").then(function(data) {
 
 function setGraph(data) {
     var margin = {top: 50, right: 50, bottom: 50, left: 50}
-    , width = 600 - margin.left - margin.right // Use the window's width 
-    , height = 500 - margin.top - margin.bottom; // Use the window's height
+    , width = 600 - margin.left - margin.right
+    , height = 500 - margin.top - margin.bottom;
     const colors = ["#3B67BC", "#EA722B", "#A7A7A7", "#FFB801", "#5191CF"]
 
     var svg = d3.select(".trips-analysis-by-quarter")
@@ -88,6 +88,11 @@ function setGraph(data) {
     const toggleWeekday = document.querySelector("input[value='weekday']")
     const toggleWeekend = document.querySelector("input[value='weekend']")
 
+    const tooltip = d3.select("body")
+    .append("div")
+    .style("visability", "hidden")
+    .text("Hello world!")
+
     weekdayData.forEach(dataset => {
         svg.append("path")
         .datum(dataset)
@@ -95,7 +100,14 @@ function setGraph(data) {
         .attr("d", line)
         .attr("fill", "none")
         .attr("stroke", dataset[0].color)
-        .attr("stroke-width", "2.5");
+        .attr("stroke-width", "2.5")
+        .on("mousemove", function(d) {
+            tooltip.transition()
+                .duration(50)
+                .style("opacity", .9)
+                .style("left", (d3.event.pageX + 10) + "px")
+                .style("top", (d3.event.pageY + 10) + "px");
+        })
     })
     
     toggleWeekday.addEventListener("click", function(e) {
@@ -132,7 +144,7 @@ function setGraph(data) {
 }
 
 function createLegend(colors){
-    const legend = d3.select(".test").append("svg")
+    const legend = d3.select(".trips-analysis-by-quarter").append("svg")
     .attr("class","legend")
     .attr("transform", "translate(60,55)")
 
