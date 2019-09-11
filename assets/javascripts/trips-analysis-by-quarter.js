@@ -1,63 +1,59 @@
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
-
-// set the ranges
-var x = d3.scaleLinear().range([0, width]);
-var y = d3.scaleLinear().range([height, 0]);
-
-// // define the line
-var valueline = d3.line()
-    .x(function(d) { return x(+d.tod); })
-    .y(function(d) { return y(+d.proportion_q1_2019_wd); });
-    
-
-// // append the svg obgect to the body of the page
-// // appends a 'group' element to 'svg'
-// // moves the 'group' element to the top left margin
-var svg = d3.select(".trips-analysis-by-quarter")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-// // Get the datas
-d3.csv("/assets/data/tod_quarter_dow.csv").then(data => {
+d3.csv("/assets/data/trips_simplified.csv").then( data => {
+    //X AXIS: yr_qtr (ex: trip_q4_2018)
+    //Y AXIS: total_count (ex: 4093)
     console.log(data)
-  // Scale the range of the data
-  x.domain(d3.extent(data, function(d) { return +d.tod; } ));
-  y.domain([0, d3.max(data, function(d) { return +d.proportion_q1_2019_wd; })]);
 
-  const tooltip = d3.select("body").append("div")
-                   .attr("class", "tooltip")
-                   .style("opacity", 0);
+    var margin = {top: 50, right: 50, bottom: 50, left: 50}
+  , width = 700- margin.left - margin.right // Use the window's width 
+  , height = 600 - margin.top - margin.bottom; // Use the window's height
+  var n = 7
 
-  // Add the valueline path.
-  svg.append("path")
-      .data([data])
-      .attr("class", "line")
-      .attr("d", valueline)
-      .attr("fill","none")
-      .attr("stroke", "red")
-      .on("mouseover", (d) => {
-        tooltip.transition()
-        .duration(200)
-        .style("opacity", .9);
-        tooltip.html(htmlValue(d))
-        .style("left", (d3.event.pageX) + "px")
-        .style("top", (d3.event.pageY - 28) + "px");
-      })
 
-  // Add the X Axis
-  svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x))
+    var svg = d3.select(".trips-analysis-by-quarter")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
 
-  // Add the Y Axis
-  svg.append("g")
-      .call(d3.axisLeft(y));
-});
 
-function htmlValue(data) {
-    return data.proportion_q1_2019_wd
-  }
+    var x = d3.scaleBand()
+        .range([0, width])
+        .padding(0.1)
+    
+    x.domain(data.map( d => { return +d.yr_qtr}))
+
+    var y = d3.scaleLinear()
+        .range([height, 0])
+    y.domain([450, 45000])
+
+    console.log(d3.max(data, function(d) { return d.total_count}))
+
+    var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    g.append("g")
+	.attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    
+    g.append("g")
+	.call(d3.axisLeft(y))
+	.append("text")
+	.attr("fill", "#000")
+	.attr("transform", "rotate(-90)")
+	.attr("y", 6)
+	.attr("dy", "0.71em")
+	.attr("text-anchor", "end")
+	.text("Total Count");
+
+    g.selectAll(".bar")
+	.data(data)
+	.enter().append("rect")
+	.attr("class", "bar")
+	.attr("x", function (d) { return x(d.yr_qtr); })
+	.attr("y", function (d) {
+        console.log(+d.total_count)
+        console.log(y(+d.total_count))
+        return y(+d.total_count); })
+	.attr("width", x.bandwidth())
+	.attr("height", function (d) {
+	 	return height - y(+(d.total_count));
+	 });
+
+})
