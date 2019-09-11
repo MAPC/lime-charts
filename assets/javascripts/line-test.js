@@ -6,6 +6,7 @@ function setGraph(data) {
     var margin = {top: 50, right: 50, bottom: 50, left: 50}
     , width = 600 - margin.left - margin.right // Use the window's width 
     , height = 500 - margin.top - margin.bottom; // Use the window's height
+    const colors = ["#3B67BC", "#EA722B", "#A7A7A7", "#FFB801", "#5191CF"]
 
     var svg = d3.select(".test")
         .attr("width", width + margin.left + margin.right)
@@ -13,10 +14,6 @@ function setGraph(data) {
     .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("class","graph")
-
-
-    // The number of datapoints
-    //var n = 24;
 
     // 5. X scale will use the index of our data
     var xScale = d3.scaleLinear()
@@ -32,12 +29,16 @@ function setGraph(data) {
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
+        .call(d3.axisBottom(xScale))
+
 
     // 4. Call the y axis in a group tag
-    svg.append("g")
+    const yAxis = svg.append("g")
         .attr("class", "y axis")
-        .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
+        .call(d3.axisLeft(yScale)) // Create an axis component with d3.axisLeft
+    yAxis.append("text")
+    .text("Axis")
+    .attr("transform", "translate(0," + height + ")")
 
     // 7. d3's line generator
     const line = d3.line()
@@ -45,7 +46,6 @@ function setGraph(data) {
         .y(function(d) { return yScale(d.y); }) // set the y values for the line generator 
 
     // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
-    const colors = ["#3B67BC", "#EA722B", "#A7A7A7", "#FFB801", "#5191CF"]
 
     const weekdayData = [
         data.map(function(d) {
@@ -127,4 +127,65 @@ function setGraph(data) {
             .attr("stroke-width", "2.5");
         })
     })
+
+    createLegend(colors)
+}
+
+function createLegend(colors){
+    const legend = d3.select(".test").append("svg")
+    .attr("class","legend")
+    .attr("transform", "translate(60,55)")
+
+    legend.append("circle")
+    .attr("fill", colors[0])
+    .attr("r",5)
+    .attr("transform", "translate(5,10)")
+
+    legend.append("text")
+    .attr("transform", "translate(15,15)")
+    .text("Proportion of Q2 2018 Rides")
+
+    ///
+
+    legend.append("circle")
+    .attr("fill", colors[1])
+    .attr("r",5)
+    .attr("transform", "translate(5,30)")
+
+    legend.append("text")
+    .attr("transform", "translate(15,35)")
+    .text("Proportion of Q3 2018 Rides")
+
+    ///
+
+    legend.append("circle")
+    .attr("fill", colors[2])
+    .attr("r",5)
+    .attr("transform", "translate(5,50)")
+
+    legend.append("text")
+    .attr("transform", "translate(15,55)")
+    .text("Proportion of Q4 2018 Rides")
+
+    ///
+
+    legend.append("circle")
+    .attr("fill", colors[3])
+    .attr("r",5)
+    .attr("transform", "translate(5,70)")
+
+    legend.append("text")
+    .attr("transform", "translate(15,75)")
+    .text("Proportion of Q1 2019 Rides")
+
+    ///
+
+    legend.append("circle")
+    .attr("fill", colors[4])
+    .attr("r",5)
+    .attr("transform", "translate(5,90)")
+
+    legend.append("text")
+    .attr("transform", "translate(15,95)")
+    .text("Proportion of Q2 2019 Rides")
 }
