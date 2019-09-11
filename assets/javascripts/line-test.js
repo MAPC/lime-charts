@@ -2,83 +2,129 @@ d3.csv("/assets/data/tod_quarter_dow.csv").then(function(data) {
     setGraph(data)
 })
 
-function setGraph(data)
-{
-// 2. Use the margin convention practice 
-var margin = {top: 50, right: 50, bottom: 50, left: 50}
-  , width = 600 - margin.left - margin.right // Use the window's width 
-  , height = 500 - margin.top - margin.bottom; // Use the window's height
+function setGraph(data) {
+    var margin = {top: 50, right: 50, bottom: 50, left: 50}
+    , width = 600 - margin.left - margin.right // Use the window's width 
+    , height = 500 - margin.top - margin.bottom; // Use the window's height
 
-// 1. Add the SVG to the page and employ #2
-var svg = d3.select(".test")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var svg = d3.select(".test")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .attr("class","graph")
 
 
-// The number of datapoints
-var n = 24;
+    // The number of datapoints
+    //var n = 24;
 
-// 5. X scale will use the index of our data
-var xScale = d3.scaleLinear()
-    .domain([0, n-1]) // input
-    .range([0, width]); // output
+    // 5. X scale will use the index of our data
+    var xScale = d3.scaleLinear()
+        .domain([0, 23]) // input
+        .range([0, width]); // output
 
-// 6. Y scale will use the randomly generate number 
-var yScale = d3.scaleLinear()
-    .domain([0, .1]) // input 
-    .range([height, 0]); // output 
+    // 6. Y scale will use the randomly generate number 
+    var yScale = d3.scaleLinear()
+        .domain([0, .1]) // input 
+        .range([height, 0]); // output 
 
-// 3. Call the x axis in a group tag
-svg.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
+    // 3. Call the x axis in a group tag
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
 
-// 4. Call the y axis in a group tag
-svg.append("g")
-    .attr("class", "y axis")
-    .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
+    // 4. Call the y axis in a group tag
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
 
-// 7. d3's line generator
-var line = d3.line()
-    .x(function(d, i) { return xScale(i); }) // set the x values for the line generator
-    .y(function(d) { return yScale(d.y); }) // set the y values for the line generator 
+    // 7. d3's line generator
+    const line = d3.line()
+        .x(function(d, i) { return xScale(i); }) // set the x values for the line generator
+        .y(function(d) { return yScale(d.y); }) // set the y values for the line generator 
 
-// 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
-var dataset1 = data.map(function(d) {
-    return {"y": d.proportion_q2_2018_wd } })
+    // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
+    const colors = ["#3B67BC", "#EA722B", "#A7A7A7", "#FFB801", "#5191CF"]
 
-var dataset2 = data.map(function(d) {
-    return {"y": d.proportion_q2_2019_wd,
-            "color": "red"} })
+    const weekdayData = [
+        data.map(function(d) {
+            return {"y": d.proportion_q2_2018_wd,
+                    "color": colors[0] } }),
+        data.map(function(d) {
+            return {"y": d.proportion_q3_2018_wd,
+                    "color": colors[1] } }),
+        data.map(function(d) {
+            return {"y": d.proportion_q4_2018_wd,
+                    "color": colors[2] } }),
+        data.map(function(d) {
+            return {"y": d.proportion_q1_2019_wd,
+                    "color": colors[3] } }),
+        data.map(function(d) {
+            return {"y": d.proportion_q2_2019_wd,
+                    "color": colors[4] } })
+        
+    ]
 
-console.log(dataset2)
+    const weekendData = [
+        data.map(function(d) {
+            return {"y": d.proportion_q2_2018_wnd,
+                    "color": colors[0] } }),
+        data.map(function(d) {
+            return {"y": d.proportion_q3_2018_wnd,
+                    "color": colors[1] } }),
+        data.map(function(d) {
+            return {"y": d.proportion_q4_2018_wnd,
+                    "color": colors[2] } }),
+        data.map(function(d) {
+            return {"y": d.proportion_q1_2019_wnd,
+                    "color": colors[3] } }),
+        data.map(function(d) {
+            return {"y": d.proportion_q2_2019_wnd,
+                    "color": colors[4] } })
+        
+    ]
 
-// 9. Append the path, bind the data, and call the line generator 
-svg.append("path")
-    .datum(dataset1) // 10. Binds data to the line 
-    .attr("class", "line") // Assign a class for styling 
-    .attr("d", line) // 11. Calls the line generator
-    .attr("fill", "none")
-    .attr("stroke", "blue")
-    .attr("stroke-width", "2.5")
+    const toggleWeekday = document.querySelector("input[value='weekday']")
+    const toggleWeekend = document.querySelector("input[value='weekend']")
 
-svg.append("path")
-    .datum(dataset2) // 10. Binds data to the line 
-    .attr("class", "line") // Assign a class for styling 
-    .attr("d", line) // 11. Calls the line generator
-    .attr("fill", "none")
-    .attr("stroke", "red")
-    .attr("stroke-width", "2.5")
+    weekdayData.forEach(dataset => {
+        svg.append("path")
+        .datum(dataset)
+        .attr("class", "line")
+        .attr("d", line)
+        .attr("fill", "none")
+        .attr("stroke", dataset[0].color)
+        .attr("stroke-width", "2.5");
+    })
+    
+    toggleWeekday.addEventListener("click", function(e) {
+        d3.select(".graph")
+        .selectAll(".line")
+        .remove()
+        weekdayData.forEach(dataset => {
+            svg.append("path")
+            .datum(dataset)
+            .attr("class", "line")
+            .attr("d", line)
+            .attr("fill", "none")
+            .attr("stroke", dataset[0].color)
+            .attr("stroke-width", "2.5");
+        })
+    })
 
-// 12. Appends a circle for each datapoint 
-svg.selectAll(".dot")
-    .data(dataset1)
-  .enter().append("circle") // Uses the enter().append() method
-    .attr("class", "dot") // Assign a class for styling
-    .attr("cx", function(d, i) { return xScale(i) })
-    .attr("cy", function(d) { return yScale(d.y) })
-    .attr("r", 5);
+    toggleWeekend.addEventListener("click", function(e) {
+        d3.select(".graph")
+        .selectAll(".line")
+        .remove()
+        weekendData.forEach(dataset => {
+            svg.append("path")
+            .datum(dataset)
+            .attr("class", "line")
+            .attr("d", line)
+            .attr("fill", "none")
+            .attr("stroke", dataset[0].color)
+            .attr("stroke-width", "2.5");
+        })
+    })
 }
