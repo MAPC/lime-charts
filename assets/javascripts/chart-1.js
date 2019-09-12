@@ -22,7 +22,7 @@ d3.csv("/assets/data/trips_simplified.csv").then( data => {
         .range([height, 0])
         .domain([0, 1])
 
-    var svg = d3.select(".trips-analysis-by-quarter")
+    var svg = d3.select(".chart-1")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
 
