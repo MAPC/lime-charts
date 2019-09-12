@@ -8,7 +8,7 @@ function setGraph(data) {
     , height = 500 - margin.top - margin.bottom;
     const colors = ["#3B67BC", "#EA722B", "#A7A7A7", "#FFB801", "#5191CF"]
 
-    var svg = d3.select(".trips-analysis-by-quarter")
+    var svg = d3.select(".chart-2")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -144,7 +144,7 @@ function setGraph(data) {
 }
 
 function createLegend(colors){
-    const legend = d3.select(".trips-analysis-by-quarter").append("svg")
+    const legend = d3.select(".chart-2").append("svg")
     .attr("class","legend")
     .attr("transform", "translate(60,55)")
 
