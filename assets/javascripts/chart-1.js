@@ -40,7 +40,7 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
 	.attr("text-anchor", "end")
     .text("Total Count");
 
-    var colors = ["b33040", "#d25c4d", "#f2b447", "#d9d574"];
+    var colors = ["#d25c4d","#d9d574"];
     var groups = svg.selectAll("g.ridetype")
     .data(series)
     .enter().append("g")
@@ -52,10 +52,39 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
     .data(function(d) { return d; })
     .enter().append("rect")
     .attr("x", function(d) { return x(d.data.yr_qtr) })
-    .attr("y", d => {
-        console.log(d)
-        return y(d[1])
-    })
+    .attr("y", d => { return y(d[1]) })
 	.attr("height", d => Math.abs(y(d[1]) - y(d[0])))
     .attr("width", x.bandwidth())
+
+    createLegend(colors)
 })
+
+function createLegend(colors){
+    const legend = d3.select(".chart-1").append("svg")
+    .attr("class","legend")
+    .attr("transform", `translate(50,600)`)
+    .attr("width", 200)
+    .attr("height", 50)
+
+    legend.append("circle")
+    .attr("fill", colors[0])
+    .attr("r",5)
+    .attr("transform", "translate(5,10)")
+
+    legend.append("text")
+    .attr("transform", "translate(15,15)")
+    .text("E-Bikes")
+
+    ///
+
+    legend.append("circle")
+    .attr("fill", colors[1])
+    .attr("r",5)
+    .attr("transform", "translate(5,30)")
+
+    legend.append("text")
+    .attr("transform", "translate(15,35)")
+    .text("Mechanical Bikes")
+
+    
+}
