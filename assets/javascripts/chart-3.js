@@ -3,17 +3,10 @@ d3.csv("/assets/data/chart-3.csv").then(function(data) {
 })
 
 function setGraph(data) {
-    var margin = {top: 50, right: 50, bottom: 50, left: 50}
+    var margin = {top: 50, right: 75, bottom: 50, left: 75}
     , width = 600 - margin.left - margin.right
     , height = 500 - margin.top - margin.bottom;
     const colors = ["#3B67BC", "#EA722B", "#A7A7A7", "#FFB801", "#5191CF"]
-
-    var svg = d3.select(".chart-3")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .attr("class","graph")
 
     // 5. X scale will use the index of our data
     var xScale = d3.scaleLinear()
@@ -23,28 +16,37 @@ function setGraph(data) {
     // 6. Y scale will use the randomly generate number 
     var yScale = d3.scaleLinear()
         .domain([0, .1]) // input 
-        .range([height, 0]); // output 
+        .range([height, 0]); // output
 
-    // 3. Call the x axis in a group tag
-    svg.append("g")
+    var svg = d3.select(".chart-3")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+    
+    var graph = svg.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .attr("class","graph")
+
+    graph.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
-        .attr("height", 20)
         .call(d3.axisBottom(xScale))
+    
+    svg.append("text")
+        .text("Length (m)")
+        .attr("transform", `translate(275, ${(height + margin.top + margin.bottom -5)})`)
 
-
-    // 4. Call the y axis in a group tag
-    svg.append("g")
+    graph.append("g")
         .attr("class", "y axis")
         .call(d3.axisLeft(yScale))
-        .append("text")
-        .text("Axis")
-        .attr("transform", "translate(0," + height + ")")
 
-    // 7. d3's line generator
+    svg.append("text")
+        .text("Percentage (%) of Trips")
+        .attr("transform", `translate(25, 325) rotate(-90)`)
+    
+
     const line = d3.line()
-        .x(function(d, i) { return xScale(i); }) // set the x values for the line generator
-        .y(function(d) { return yScale(d.y); }) // set the y values for the line generator
+        .x(function(d, i) { return xScale(i); })
+        .y(function(d) { return yScale(d.y); })
         .curve(d3.curveMonotoneX)
 
 
@@ -72,20 +74,28 @@ function setGraph(data) {
     ]
 
     dataArray.forEach(dataset => {
-        svg.append("path")
+        graph.append("path")
         .datum(dataset)
-        .attr("class", "line")
+        .attr("class", `${dataset[0].class} line`)
         .attr("d", line)
         .attr("fill", "none")
         .attr("stroke", dataset[0].color)
-        .attr("stroke-width", "2.5")
-        .attr("class", dataset[0].class)
+        .attr("stroke-width", "2")
     })
 
-    svg.selectAll(".line")
-    .on("mouseover", function(d) {
-        console.log(d[0].title)
-    })
+    // const tooltip = d3.select("svg").append("svg")
+    //     .attr("class", "tooltip")
+
+    // svg.selectAll(".line")
+    //     .on("mouseover", function(d) {
+    //         tooltip.transition()
+    //         .duration(50)
+    //         .style("opacity", .9);
+            
+    //         tooltip.html(htmlValue(d))
+    //         .style("left", (d3.event.pageX + 10) + "px")
+    //         .style("top", (d3.event.pageY + 10) + "px");
+    //     })
 
 
     createLegend(colors)
@@ -172,4 +182,8 @@ function toggleLine(elementClass){
     } else {
         d3.select(elementClass).attr("visibility", "hidden")
     }
+}
+
+function htmlValue(data){
+    return 'Hello world!'
 }
