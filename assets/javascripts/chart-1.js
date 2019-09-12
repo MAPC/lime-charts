@@ -7,13 +7,12 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
 
     var dataset = d3.stack()
         .keys(["ele_prcntg", "mechanical_prcntg"])
-
-    const series = dataset(data)
+        const series = dataset(data)
 
     var x = d3.scaleBand()
-        .range([0, width])
-        .padding(0.1)
-        .domain(data.map( d => { return d.yr_qtr}))
+            .range([0, width])
+            .padding(0.1)
+            .domain(data.map( d => { return d.yr_qtr}))
 
     var y = d3.scaleLinear()
         .range([height, 0])
@@ -25,10 +24,6 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
 
     var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    g.append("g")
-	.attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
     
     g.append("g")
 	.call(d3.axisLeft(y))
@@ -38,23 +33,122 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
 	.attr("y", 6)
 	.attr("dy", "0.71em")
 	.attr("text-anchor", "end")
-    .text("Total Count");
+    .text("% of Rides");
 
     var colors = ["#d25c4d","#d9d574"];
-    var groups = svg.selectAll("g.ridetype")
-    .data(series)
-    .enter().append("g")
-    .attr("class", "ridetype")
-    .style("fill", function(d, i) { return colors[i]; })
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    g.append("g")
+        .attr("class", "xaxis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x))
+
+        var groups = svg.selectAll("g.ridetype")
+        .data(series)
+        .enter().append("g")
+        .attr("class", "ridetype")
+        .style("fill", function(d, i) { return colors[i]; })
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     groups.selectAll("rect")
-    .data(function(d) { return d; })
-    .enter().append("rect")
-    .attr("x", function(d) { return x(d.data.yr_qtr) })
-    .attr("y", d => { return y(d[1]) })
-	.attr("height", d => Math.abs(y(d[1]) - y(d[0])))
-    .attr("width", x.bandwidth())
+        .data(function(d) { return d; })
+        .enter().append("rect")
+        .attr("x", function(d) { return x(d.data.yr_qtr) })
+        .attr("y", d => { return y(d[1]) })
+        .attr("height", d => Math.abs(y(d[1]) - y(d[0])))
+        .attr("width", x.bandwidth())
+
+    
+
+    const toggleQuarters = document.querySelector("input[value='quarterly']")
+    const toggleMonths = document.querySelector("input[value='monthly']")
+
+   
+
+    toggleQuarters.addEventListener("click", function(e) {
+        var dataset = d3.stack()
+        .keys(["ele_prcntg", "mechanical_prcntg"])
+        const series = dataset(data)
+
+        x.domain(data.map( d => { return d.yr_qtr}))
+
+        d3.select(".xaxis")
+            .remove()
+        
+            d3.selectAll("g.ridetype")
+            .selectAll("rect")
+            .attr("class","edit")
+
+        g.append("g")
+            .attr("class", "xaxis")
+	        .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x))
+
+        var groups = svg.selectAll("g.ridetype")
+            .data(series)
+            .enter().append("g")
+            .attr("class", "ridetype")
+            .style("fill", function(d, i) { return colors[i]; })
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        groups.selectAll("rect")
+            .data(function(d) { return d; })
+            .enter().append("rect")
+            .attr("x", function(d) { return x(d.data.yr_qtr) })
+            .attr("y", d => { return y(d[1]) })
+            .attr("height", d => Math.abs(y(d[1]) - y(d[0])))
+            .attr("width", x.bandwidth())
+    })
+
+    toggleMonths.addEventListener("click", function(e) {
+        var dataset = d3.stack()
+        .keys(["ele_prcntg", "mechanical_prcntg"])
+
+        const series = dataset(data)
+
+        x.domain(data.map( d => { return d._month}))
+
+        d3.select(".xaxis")
+            .remove()
+        
+        d3.selectAll("g.ridetype")
+        .selectAll("rect").exit()
+            .remove()
+
+
+        g.append("g")
+            .attr("class", "xaxis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x))
+
+        var groups = svg.selectAll("g.ridetype")
+            .data(series)
+            .enter().append("g")
+            .attr("class", "ridetype")
+            .style("fill", function(d, i) { return colors[i]; })
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        groups.selectAll("rect")
+            .data(function(d) { return d; })
+            .enter().append("rect")
+            .attr("x", function(d) { return x(d.data._month) })
+            .attr("y", d => { return y(d[1]) })
+            .attr("height", d => Math.abs(y(d[1]) - y(d[0])))
+            .attr("width", x.bandwidth())
+    })
+
+    // var groups = svg.selectAll("g.ridetype")
+    // .data(series)
+    // .enter().append("g")
+    // .attr("class", "ridetype")
+    // .style("fill", function(d, i) { return colors[i]; })
+    // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // groups.selectAll("rect")
+    // .data(function(d) { return d; })
+    // .enter().append("rect")
+    // .attr("x", function(d) { return x(d.data.yr_qtr) })
+    // .attr("y", d => { return y(d[1]) })
+	// .attr("height", d => Math.abs(y(d[1]) - y(d[0])))
+    // .attr("width", x.bandwidth())
 
     createLegend(colors)
 })
