@@ -3,22 +3,24 @@ d3.csv("/assets/data/tod_quarter_dow.csv").then(function(data) {
 })
 
 function setGraph(data) {
-    var margin = {top: 50, right: 50, bottom: 50, left: 50}
-    , width = 600 - margin.left - margin.right
-    , height = 500 - margin.top - margin.bottom;
+    var margin = {top: 50, right: 75, bottom: 50, left: 75}
+    , width = 700 - margin.left - margin.right
+    , height = 650 - margin.top - margin.bottom;
     const colors = ["#3B67BC", "#EA722B", "#A7A7A7", "#FFB801", "#5191CF"]
 
     var svg = d3.select(".chart-2")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
-    .append("g")
+    
+    var graph= svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("class","graph")
 
+        
     // 5. X scale will use the index of our data
     var xScale = d3.scaleLinear()
         .domain([0, 23]) // input
-        .range([0, width]); // output
+        .range([0, width]) // output
 
     // 6. Y scale will use the randomly generate number 
     var yScale = d3.scaleLinear()
@@ -26,19 +28,29 @@ function setGraph(data) {
         .range([height, 0]); // output 
 
     // 3. Call the x axis in a group tag
-    svg.append("g")
+    graph.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(xScale))
 
 
     // 4. Call the y axis in a group tag
-    const yAxis = svg.append("g")
+    graph.append("g")
         .attr("class", "y axis")
         .call(d3.axisLeft(yScale)) // Create an axis component with d3.axisLeft
-    yAxis.append("text")
-    .text("Axis")
-    .attr("transform", "translate(0," + height + ")")
+    
+    svg.append("text")
+        .attr("fill", "#000")
+        .attr("transform", "translate(25, 175) rotate(-90)")
+        .attr("text-anchor", "end")
+        .text("Percentage (%) of Rides")
+        
+    svg.append("text")
+        .attr("fill", "#000")
+        .attr("transform", `translate(325, ${height + margin.top + margin.bottom -5})`)
+        .attr("text-anchor", "end")
+        .text("Time")
+        
 
     // 7. d3's line generator
     const line = d3.line()
@@ -94,7 +106,7 @@ function setGraph(data) {
     .text("Hello world!")
 
     weekdayData.forEach(dataset => {
-        svg.append("path")
+        graph.append("path")
         .datum(dataset)
         .attr("class", "line")
         .attr("d", line)
@@ -115,7 +127,7 @@ function setGraph(data) {
         .selectAll(".line")
         .remove()
         weekdayData.forEach(dataset => {
-            svg.append("path")
+            graph.append("path")
             .datum(dataset)
             .attr("class", "line")
             .attr("d", line)
@@ -130,7 +142,7 @@ function setGraph(data) {
         .selectAll(".line")
         .remove()
         weekendData.forEach(dataset => {
-            svg.append("path")
+            graph.append("path")
             .datum(dataset)
             .attr("class", "line")
             .attr("d", line)
@@ -146,7 +158,7 @@ function setGraph(data) {
 function createLegend(colors){
     const legend = d3.select(".chart-2").append("svg")
     .attr("class","legend")
-    .attr("transform", "translate(60,55)")
+    .attr("transform", "translate(100,55)")
 
     legend.append("circle")
     .attr("fill", colors[0])
