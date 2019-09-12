@@ -1,30 +1,30 @@
-d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
+d3.csv("/assets/data/trips_simplified.csv").then( data => {
     //X AXIS: yr_qtr (ex: trip_q4_2018)
     //Y AXIS: total_count (ex: 4093)
+    var margin = {top: 50, right: 50, bottom: 50, left: 50}
+    , width = 700- margin.left - margin.right
+    , height = 600 - margin.top - margin.bottom;
+
     console.log(data)
 
-    var margin = {top: 50, right: 50, bottom: 50, left: 50}
-  , width = 700- margin.left - margin.right // Use the window's width 
-  , height = 600 - margin.top - margin.bottom; // Use the window's height
-  var n = 7
 
+    var dataset = d3.stack()
+        .keys(["ele_prcntg","mechanical_prcntg"])
 
-    var svg = d3.select(".trips-analysis-by-quarter")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-
+    const series = dataset(data)
 
     var x = d3.scaleBand()
         .range([0, width])
         .padding(0.1)
-    
-    x.domain(data.map( d => { return d.yr_qtr}))
+        .domain(data.map( d => { return d.yr_qtr}))
 
     var y = d3.scaleLinear()
         .range([height, 0])
-    y.domain([450, 45000])
+        .domain([0, 1])
 
-    console.log(d3.max(data, function(d) { return d.total_count}))
+    var svg = d3.select(".trips-analysis-by-quarter")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
 
     var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -40,20 +40,25 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
 	.attr("y", 6)
 	.attr("dy", "0.71em")
 	.attr("text-anchor", "end")
-	.text("Total Count");
+    .text("Total Count");
 
-    g.selectAll(".bar")
-	.data(data)
-	.enter().append("rect")
-	.attr("class", "bar")
-	.attr("x", function (d) { return x(d.yr_qtr); })
-	.attr("y", function (d) {
-        console.log(+d.total_count)
-        console.log(y(+d.total_count))
-        return y(+d.total_count); })
-	.attr("width", x.bandwidth())
-	.attr("height", function (d) {
-	 	return height - y(+(d.total_count));
-	 });
+    var colors = ["b33040", "#d25c4d", "#f2b447", "#d9d574"];
+    var groups = svg.selectAll("g.cost")
+    .data(series)
+    .enter().append("g")
+    .attr("class", "cost")
+    .style("fill", function(d, i) { return colors[i]; });
 
+    groups.selectAll("rect")
+    .data(function(d) { return d; })
+    .enter().append("rect")
+    .attr("x", function(d) {
+        console.log(d.data.yr_qtr)
+        return x(d.data.yr_qtr) })
+    .attr("y", d => {
+        console.log(d)
+        y(d[1])
+    })
+	.attr("height", d => y(d[0]) - y(d[1]))
+    .attr("width", x.bandwidth())
 })
