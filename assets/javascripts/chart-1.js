@@ -69,7 +69,7 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
 	.attr("text-anchor", "end")
     .text("% of Rides")
 
-    var colors = ["#d25c4d","#d9d574"];
+    var colors = ["#3B67BC", "#EA722B"]
 
     g.append("g")
         .attr("class", "xaxis-quarterly")
