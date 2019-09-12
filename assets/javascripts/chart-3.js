@@ -4,8 +4,8 @@ d3.csv("/assets/data/chart-3.csv").then(function(data) {
 
 function setGraph(data) {
     var margin = {top: 50, right: 75, bottom: 50, left: 75}
-    , width = 600 - margin.left - margin.right
-    , height = 500 - margin.top - margin.bottom;
+    , width = 700 - margin.left - margin.right
+    , height = 650 - margin.top - margin.bottom;
     const colors = ["#3B67BC", "#EA722B", "#A7A7A7", "#FFB801", "#5191CF"]
 
     // 5. X scale will use the index of our data

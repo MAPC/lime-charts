@@ -15,7 +15,6 @@ function setGraph(data) {
     var graph= svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("class","graph")
-
         
     // 5. X scale will use the index of our data
     var xScale = d3.scaleLinear()

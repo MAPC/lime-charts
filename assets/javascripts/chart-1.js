@@ -49,7 +49,7 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
         .domain(data.map( d => { return d._month}))
 
     var y = d3.scaleLinear()
-        .range([height, 0])
+        .range([height-margin.top, 0])
         .domain([0, 1])
 
     var svg = d3.select(".chart-1")
@@ -57,9 +57,9 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
         .attr("height", height + margin.top + margin.bottom)
 
     var graph = svg.append("g")
-        .attr("transform", "translate(" + margin.left + "," + 5 + ")")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("class", "graph")
-        .attr("height", height)
+        .attr("height", height-margin.top)
     
     graph.append("g")
 	    .call(d3.axisLeft(y))
@@ -72,7 +72,7 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
 
     svg.append("text")
 	.attr("fill", "#000")
-	.attr("transform", `translate(325, ${height + margin.top + margin.bottom -5})`)
+	.attr("transform", `translate(325, ${height + margin.top +25})`)
 	.attr("text-anchor", "end")
     .text("Time")
 
@@ -80,7 +80,7 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
 
     graph.append("g")
         .attr("class", "xaxis-quarterly")
-        .attr("transform", "translate(0," + height + ")")
+        .attr("transform", "translate(0," + (height - margin.top) + ")")
         .call(d3.axisBottom(xQuarterly))
         .selectAll("text")
         .style("text-anchor", "end")
@@ -90,7 +90,7 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
     
     graph.append("g")
         .attr("class", "xaxis-monthly")
-        .attr("transform", "translate(0," + height + ")")
+        .attr("transform", "translate(0," + (height - margin.top) + ")")
         .attr("visibility","hidden")
         .call(d3.axisBottom(xMonthly))
         .selectAll("text")
