@@ -47,11 +47,8 @@ function setGraph(data) {
         .y(function(d) { return yScale(d.y); }) // set the y values for the line generator
         .curve(d3.curveMonotoneX)
 
-    const dataset = data.map(function(datapoint) {
-        return {y: datapoint.proportion_winter_wd}
-    })
 
-    const weekdayData = [
+    const dataArray = [
         data.map(function(d) {
             return {"y": d.proportion_winter_wd,
                     "color": colors[0],
@@ -74,10 +71,7 @@ function setGraph(data) {
                     "class": "summer_wnd" } })
     ]
 
-
-
-    weekdayData.forEach(dataset => {
-        console.log(dataset)
+    dataArray.forEach(dataset => {
         svg.append("path")
         .datum(dataset)
         .attr("class", "line")
@@ -111,6 +105,7 @@ function createLegend(colors){
     legend.append("text")
     .attr("transform", "translate(15,15)")
     .text("Fall/Winter Weekday")
+    .attr("class", "legend-winter-wd")
 
     ///
 
@@ -118,10 +113,12 @@ function createLegend(colors){
     .attr("fill", colors[1])
     .attr("r",5)
     .attr("transform", "translate(5,30)")
+    .attr("class", "legend-winter-wnd")
 
     legend.append("text")
     .attr("transform", "translate(15,35)")
     .text("Fall/Winter Weekend")
+    .attr("class", "legend-winter-wnd")
 
     ///
 
@@ -129,10 +126,12 @@ function createLegend(colors){
     .attr("fill", colors[2])
     .attr("r",5)
     .attr("transform", "translate(5,50)")
+    .attr("class", "legend-summer-wd")
 
     legend.append("text")
     .attr("transform", "translate(15,55)")
-    .text("Spring/Summer Weekend")
+    .text("Spring/Summer Weekday")
+    .attr("class", "legend-summer-wd")
 
     ///
 
@@ -140,14 +139,37 @@ function createLegend(colors){
     .attr("fill", colors[3])
     .attr("r",5)
     .attr("transform", "translate(5,70)")
+    .attr("class", "legend-summer-wnd")
 
     legend.append("text")
     .attr("transform", "translate(15,75)")
-    .text("Spring/Summer Weekday")
+    .text("Spring/Summer Weekend")
+    .attr("class", "legend-summer-wnd")
 
-    const test = document.querySelector(".legend-winter-wd")
-    test.addEventListener("click", function(e){
-        d3.select(".winter_wd")
-        .attr("visibility","hidden")
+    const legendEl = document.querySelector(".legend")
+    legendEl.addEventListener("click", function(e){
+        switch(e.target.attributes.class.nodeValue) {
+            case "legend-winter-wd":
+                toggleLine('.winter_wd')
+                break
+            case "legend-winter-wnd":
+                toggleLine('.winter_wnd')
+                break
+            case "legend-summer-wd":
+                toggleLine('.summer_wd')
+                break
+            case "legend-summer-wnd":
+                toggleLine('.summer_wnd')
+                break
+        }
     })
+}
+
+function toggleLine(elementClass){
+    const selection = document.querySelector(elementClass)
+    if (selection.getAttribute("visibility") === "hidden"){
+        d3.select(elementClass).attr("visibility", "visible")
+    } else {
+        d3.select(elementClass).attr("visibility", "hidden")
+    }
 }
