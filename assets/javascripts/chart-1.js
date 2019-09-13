@@ -6,6 +6,20 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
     var dataset = d3.stack()
         .keys(["ele_prcntg", "mechanical_prcntg"])
         const series = dataset(data)
+    
+    let i = 0
+    series.forEach(dataSet => {
+        console.log(dataSet.key)
+        dataSet.forEach(dataPint => {
+            console.log(dataPint)
+            if ( i < 2){
+                i++
+            }
+            else {
+                i = 0
+            }
+        })
+    })
 
     var xQuarterly = d3.scaleBand()
         .range([0, width-margin.right])

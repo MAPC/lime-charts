@@ -6,6 +6,7 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then( data => {
     var dataset = d3.stack()
         .keys(["total_count"])
         const series = dataset(data)
+    console.log(series)
 
     var xQuarterly = d3.scaleBand()
         .range([0, width-margin.right])
@@ -36,7 +37,8 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then( data => {
         .attr("height", height-margin.top)
     
     graph.append("g")
-        .call(d3.axisLeft(y))
+        .call(d3.axisLeft(y)
+        .tickFormat(d3.format("~s")))
     
     svg.append("text")
 	.attr("fill", "#000")
