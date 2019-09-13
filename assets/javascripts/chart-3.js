@@ -11,7 +11,7 @@ function setGraph(data) {
     // 5. X scale will use the index of our data
     var xScale = d3.scaleLinear()
         .domain([.1, 6.5]) // input
-        .range([0, width]); // output
+        .range([0, width - margin.left - margin.right]); // output
 
     // 6. Y scale will use the randomly generate number 
     var yScale = d3.scaleLinear()
@@ -21,6 +21,10 @@ function setGraph(data) {
     var svg = d3.select(".chart-3")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
+        svg.append("text")
+        .attr("class", "graph__title")
+        .text("Trip Length by Season and Day of Week")
+        .attr("transform", `translate(100, 15)`)
     
     var graph = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
@@ -33,15 +37,17 @@ function setGraph(data) {
     
     svg.append("text")
         .text("Length (miles)")
-        .attr("transform", `translate(275, ${(height + margin.top + margin.bottom -5)})`)
+        .attr("transform", `translate(225, ${(height + margin.top + margin.bottom -5)})`)
+        .attr("class", "axis-label")
 
     graph.append("g")
         .attr("class", "y axis")
         .call(d3.axisLeft(yScale))
 
     svg.append("text")
-        .text("Percentage (%) of Trips")
-        .attr("transform", `translate(25, 325) rotate(-90)`)
+        .text("Proportion of Trips")
+        .attr("transform", `translate(25, 400) rotate(-90)`)
+        .attr("class", "axis-label")
     
 
     const line = d3.line()
@@ -86,13 +92,13 @@ function setGraph(data) {
         .attr("stroke-width", "2")
     })
 
-    createLegend(colors)
+    createLegend(colors, width)
 }
 
-function createLegend(colors){
+function createLegend(colors, width){
     const legend = d3.select(".chart-3").append("svg")
     .attr("class","legend")
-    .attr("transform", "translate(300,55)")
+    .attr("transform", `translate(${width - 50},55)`)
 
     legend.append("circle")
     .attr("fill", colors[0])
@@ -170,8 +176,4 @@ function toggleLine(elementClass){
     } else {
         d3.select(elementClass).attr("visibility", "hidden")
     }
-}
-
-function htmlValue(data){
-    return 'Hello world!'
 }
