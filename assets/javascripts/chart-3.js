@@ -6,7 +6,7 @@ function setGraph(data) {
     var margin = {top: 50, right: 75, bottom: 50, left: 75}
     , width = 700 - margin.left - margin.right
     , height = 650 - margin.top - margin.bottom;
-    const colors = ["#3B67BC", "#EA722B", "#A7A7A7", "#FFB801", "#5191CF"]
+    const colors = ["#1b5eb8", "#0bbae9", "#5eb81b", "#ffca00"]
 
     // 5. X scale will use the index of our data
     var xScale = d3.scaleLinear()
