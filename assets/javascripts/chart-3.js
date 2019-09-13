@@ -10,7 +10,7 @@ function setGraph(data) {
 
     // 5. X scale will use the index of our data
     var xScale = d3.scaleLinear()
-        .domain([0, 50]) // input
+        .domain([.1, 6.5]) // input
         .range([0, width]); // output
 
     // 6. Y scale will use the randomly generate number 
@@ -32,7 +32,7 @@ function setGraph(data) {
         .call(d3.axisBottom(xScale))
     
     svg.append("text")
-        .text("Length (m)")
+        .text("Length (miles)")
         .attr("transform", `translate(275, ${(height + margin.top + margin.bottom -5)})`)
 
     graph.append("g")
@@ -45,29 +45,32 @@ function setGraph(data) {
     
 
     const line = d3.line()
-        .x(function(d, i) { return xScale(i); })
+        .x(function(d) { return xScale(+d.bin_center); })
         .y(function(d) { return yScale(d.y); })
-        .curve(d3.curveMonotoneX)
 
 
     const dataArray = [
         data.map(function(d) {
-            return {"y": d.proportion_winter_wd,
+            return {"bin_center": d.bin_center,
+                    "y": d.proportion_winter_wd,
                     "color": colors[0],
                     "title": "Fall/Winter Weekdays",
                     "class": "winter_wd" } }),
         data.map(function(d) {
-            return {"y": d.proportion_winter_wnd,
+            return {"bin_center": d.bin_center,
+                    "y": d.proportion_winter_wnd,
                     "color": colors[1],
                     "title": "Fall/Winter Weekends",
                     "class": "winter_wnd" } }),
         data.map(function(d) {
-            return {"y": d.proportion_summer_wd,
+            return {"bin_center": d.bin_center,
+                    "y": d.proportion_summer_wd,
                     "color": colors[2],
                     "title": "Spring/Summer Weekdays",
                     "class": "summer_wd" } }),
         data.map(function(d) {
-            return {"y": d.proportion_summer_wnd,
+            return { "bin_center": d.bin_center,
+                    "y": d.proportion_summer_wnd,
                     "color": colors[3],
                     "title": "Spring/Summer Weekends",
                     "class": "summer_wnd" } })
@@ -82,21 +85,6 @@ function setGraph(data) {
         .attr("stroke", dataset[0].color)
         .attr("stroke-width", "2")
     })
-
-    // const tooltip = d3.select("svg").append("svg")
-    //     .attr("class", "tooltip")
-
-    // svg.selectAll(".line")
-    //     .on("mouseover", function(d) {
-    //         tooltip.transition()
-    //         .duration(50)
-    //         .style("opacity", .9);
-            
-    //         tooltip.html(htmlValue(d))
-    //         .style("left", (d3.event.pageX + 10) + "px")
-    //         .style("top", (d3.event.pageY + 10) + "px");
-    //     })
-
 
     createLegend(colors)
 }

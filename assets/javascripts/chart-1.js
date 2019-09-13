@@ -37,7 +37,7 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
     
     graph.append("g")
         .call(d3.axisLeft(y)
-                .tickFormat(d3.format("~p")))
+            .tickFormat(d3.format("~p")))
     
     svg.append("text")
 	.attr("fill", "#000")
@@ -183,10 +183,6 @@ function createLegend(colors, width){
     .attr("width", 125)
     .attr("height", 100)
 
-    legend.append("text")
-    .text("Legend")
-    .attr("class", "legend__title")
-    .attr("transform", "translate(5,25)")
     
     legend.append("circle")
     .attr("fill", colors[0])

@@ -1,97 +1,121 @@
-d3.csv("/assets/data/tod_quarter_dow.csv").then(function(data) {
+d3.csv("/assets/data/tod_quarter_dow_copy.csv").then(function(data) {
     setGraph(data)
 })
 
 function setGraph(data) {
     var margin = {top: 50, right: 75, bottom: 50, left: 75}
-    , width = 700 - margin.left - margin.right
+    , width = 800 - margin.left - margin.right
     , height = 650 - margin.top - margin.bottom;
     const colors = ["#1b5eb8", "#5eb81b", "#ffca00", "#e9770b", "#0bbae9"]
+
+    var parseTime = d3.timeParse("%I%p");
+
+    let startTime = new Date(1900,0,1)
+    startTime.setHours(0)
+    let endTime = new Date(1900,0,1)
+    endTime.setHours(23)
 
     var svg = d3.select(".chart-2")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
     
+    svg.append("text")
+        .attr("class", "graph__title")
+        .text("Hourly Pattern of Trips by Quarter on Weekdays or Weekends")
+        .attr("transform", `translate(75, 15)`)
+
     var graph= svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("class","graph")
         
-    // 5. X scale will use the index of our data
-    var xScale = d3.scaleLinear()
-        .domain([0, 23]) // input
-        .range([0, width]) // output
+    var xScale = d3.scaleTime()
+    .domain([startTime, endTime])
+    .range([0, width - margin.right])
 
-    // 6. Y scale will use the randomly generate number 
     var yScale = d3.scaleLinear()
-        .domain([0, .1]) // input 
-        .range([height, 0]); // output 
+        .domain([0, .1])
+        .range([height-margin.top, 0]);
 
-    // 3. Call the x axis in a group tag
     graph.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale))
+        .attr("transform", "translate(0," + (height - margin.top) + ")")
+        .call(d3.axisBottom(xScale)
+            .tickArguments([22, d3.timeFormat("%I%p")]))
+            .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-65)");
 
-
-    // 4. Call the y axis in a group tag
     graph.append("g")
         .attr("class", "y axis")
-        .call(d3.axisLeft(yScale)) // Create an axis component with d3.axisLeft
+        .call(d3.axisLeft(yScale)
+        .tickFormat(d3.format("~p"))) 
     
     svg.append("text")
         .attr("fill", "#000")
-        .attr("transform", "translate(25, 175) rotate(-90)")
+        .attr("transform", "translate(25, 225) rotate(-90)")
         .attr("text-anchor", "end")
         .text("Percentage (%) of Rides")
+        .attr("class", "axis-label")
         
     svg.append("text")
         .attr("fill", "#000")
-        .attr("transform", `translate(325, ${height + margin.top + margin.bottom -5})`)
+        .attr("transform", `translate(375, ${height + margin.top +25})`)
         .attr("text-anchor", "end")
         .text("Time")
+        .attr("class", "axis-label")
         
-
-    // 7. d3's line generator
     const line = d3.line()
-        .x(function(d, i) { return xScale(i); }) // set the x values for the line generator
+        .x(function(d, i) { return xScale(d.x); }) // set the x values for the line generator
         .y(function(d) { return yScale(d.y); }) // set the y values for the line generator 
 
     // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
 
     const weekdayData = [
         data.map(function(d) {
-            return {"y": d.proportion_q2_2018_wd,
+            return {"x": parseTime(d.tod),
+                    "y": d.proportion_q2_2018_wd,
                     "color": colors[0] } }),
         data.map(function(d) {
-            return {"y": d.proportion_q3_2018_wd,
+            return {"x": parseTime(d.tod),
+                    "y": d.proportion_q3_2018_wd,
                     "color": colors[1] } }),
         data.map(function(d) {
-            return {"y": d.proportion_q4_2018_wd,
+            return {"x": parseTime(d.tod),
+                    "y": d.proportion_q4_2018_wd,
                     "color": colors[2] } }),
         data.map(function(d) {
-            return {"y": d.proportion_q1_2019_wd,
+            return {"x": parseTime(d.tod),
+                    "y": d.proportion_q1_2019_wd,
                     "color": colors[3] } }),
         data.map(function(d) {
-            return {"y": d.proportion_q2_2019_wd,
+            return {"x": parseTime(d.tod),
+                    "y": d.proportion_q2_2019_wd,
                     "color": colors[4] } })
         
     ]
 
     const weekendData = [
         data.map(function(d) {
-            return {"y": d.proportion_q2_2018_wnd,
+            return {"x": parseTime(d.tod),
+                    "y": d.proportion_q2_2018_wnd,
                     "color": colors[0] } }),
         data.map(function(d) {
-            return {"y": d.proportion_q3_2018_wnd,
+            return {"x": parseTime(d.tod),
+                    "y": d.proportion_q3_2018_wnd,
                     "color": colors[1] } }),
         data.map(function(d) {
-            return {"y": d.proportion_q4_2018_wnd,
+            return {"x": parseTime(d.tod),
+                    "y": d.proportion_q4_2018_wnd,
                     "color": colors[2] } }),
         data.map(function(d) {
-            return {"y": d.proportion_q1_2019_wnd,
+            return {"x": parseTime(d.tod),
+                    "y": d.proportion_q1_2019_wnd,
                     "color": colors[3] } }),
         data.map(function(d) {
-            return {"y": d.proportion_q2_2019_wnd,
+            return {"x": parseTime(d.tod),
+                    "y": d.proportion_q2_2019_wnd,
                     "color": colors[4] } })
         
     ]
@@ -99,10 +123,7 @@ function setGraph(data) {
     const toggleWeekday = document.querySelector("input[value='weekday']")
     const toggleWeekend = document.querySelector("input[value='weekend']")
 
-    const tooltip = d3.select("body")
-    .append("div")
-    .style("visability", "hidden")
-    .text("Hello world!")
+
 
     weekdayData.forEach(dataset => {
         graph.append("path")
@@ -112,13 +133,6 @@ function setGraph(data) {
         .attr("fill", "none")
         .attr("stroke", dataset[0].color)
         .attr("stroke-width", "2.5")
-        .on("mousemove", function(d) {
-            tooltip.transition()
-                .duration(50)
-                .style("opacity", .9)
-                .style("left", (d3.event.pageX + 10) + "px")
-                .style("top", (d3.event.pageY + 10) + "px");
-        })
     })
     
     toggleWeekday.addEventListener("click", function(e) {
@@ -151,64 +165,65 @@ function setGraph(data) {
         })
     })
 
-    createLegend(colors)
+    createLegend(colors, width)
 }
 
-function createLegend(colors){
+function createLegend(colors, width){
     const legend = d3.select(".chart-2").append("svg")
     .attr("class","legend")
-    .attr("transform", "translate(100,55)")
+    .attr("x", `${width + 25}`)
+    .attr("y", 40)
 
     legend.append("circle")
     .attr("fill", colors[0])
     .attr("r",5)
-    .attr("transform", "translate(5,10)")
+    .attr("transform", "translate(10,50)")
 
     legend.append("text")
-    .attr("transform", "translate(15,15)")
-    .text("Proportion of Q2 2018 Rides")
+    .attr("transform", "translate(20,55)")
+    .text("Q2 2018")
 
     ///
 
     legend.append("circle")
     .attr("fill", colors[1])
     .attr("r",5)
-    .attr("transform", "translate(5,30)")
+    .attr("transform", "translate(10,70)")
 
     legend.append("text")
-    .attr("transform", "translate(15,35)")
-    .text("Proportion of Q3 2018 Rides")
+    .attr("transform", "translate(20,75)")
+    .text("Q3 2018")
 
     ///
 
     legend.append("circle")
     .attr("fill", colors[2])
     .attr("r",5)
-    .attr("transform", "translate(5,50)")
+    .attr("transform", "translate(10,90)")
 
     legend.append("text")
-    .attr("transform", "translate(15,55)")
-    .text("Proportion of Q4 2018 Rides")
+    .attr("transform", "translate(20,95)")
+    .text("Q4 2018")
 
     ///
 
     legend.append("circle")
     .attr("fill", colors[3])
     .attr("r",5)
-    .attr("transform", "translate(5,70)")
+    .attr("transform", "translate(10,110)")
 
     legend.append("text")
-    .attr("transform", "translate(15,75)")
-    .text("Proportion of Q1 2019 Rides")
+    .attr("transform", "translate(20,115)")
+    .text("Q1 2019")
 
     ///
 
     legend.append("circle")
     .attr("fill", colors[4])
     .attr("r",5)
-    .attr("transform", "translate(5,90)")
+    .attr("transform", "translate(10,130)")
 
     legend.append("text")
-    .attr("transform", "translate(15,95)")
-    .text("Proportion of Q2 2019 Rides")
+    .attr("transform", "translate(20,135)")
+    .text("Q2 2019")
 }
