@@ -11,7 +11,7 @@ function setGraph(data) {
     // 5. X scale will use the index of our data
     var xScale = d3.scaleLinear()
         .domain([.1, 6.5]) // input
-        .range([0, width - margin.left - margin.right]); // output
+        .range([0, width ]); // output
 
     // 6. Y scale will use the randomly generate number 
     var yScale = d3.scaleLinear()
@@ -92,67 +92,13 @@ function setGraph(data) {
         .attr("stroke-width", "2")
     })
 
-    createLegend(colors, width)
+    createLegend()
 }
 
-function createLegend(colors, width){
-    const legend = d3.select(".chart-3").append("svg")
-    .attr("class","legend")
-    .attr("transform", `translate(${width - 50},55)`)
-
-    legend.append("circle")
-    .attr("fill", colors[0])
-    .attr("r",5)
-    .attr("transform", "translate(5,10)")
-    .attr("class", "legend-winter-wd")
-
-    legend.append("text")
-    .attr("transform", "translate(15,15)")
-    .text("Fall/Winter Weekday")
-    .attr("class", "legend-winter-wd")
-
-    ///
-
-    legend.append("circle")
-    .attr("fill", colors[1])
-    .attr("r",5)
-    .attr("transform", "translate(5,30)")
-    .attr("class", "legend-winter-wnd")
-
-    legend.append("text")
-    .attr("transform", "translate(15,35)")
-    .text("Fall/Winter Weekend")
-    .attr("class", "legend-winter-wnd")
-
-    ///
-
-    legend.append("circle")
-    .attr("fill", colors[2])
-    .attr("r",5)
-    .attr("transform", "translate(5,50)")
-    .attr("class", "legend-summer-wd")
-
-    legend.append("text")
-    .attr("transform", "translate(15,55)")
-    .text("Spring/Summer Weekday")
-    .attr("class", "legend-summer-wd")
-
-    ///
-
-    legend.append("circle")
-    .attr("fill", colors[3])
-    .attr("r",5)
-    .attr("transform", "translate(5,70)")
-    .attr("class", "legend-summer-wnd")
-
-    legend.append("text")
-    .attr("transform", "translate(15,75)")
-    .text("Spring/Summer Weekend")
-    .attr("class", "legend-summer-wnd")
-
+function createLegend(){
     const legendEl = document.querySelector(".legend")
     legendEl.addEventListener("click", function(e){
-        switch(e.target.attributes.class.nodeValue) {
+        switch(e.path[1].classList[0]) {
             case "legend-winter-wd":
                 toggleLine('.winter_wd')
                 break

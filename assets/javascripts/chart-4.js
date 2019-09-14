@@ -1,3 +1,4 @@
+
 d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then( data => {
     var margin = {top: 50, right: 75, bottom: 50, left: 75}
     , width = 800 - margin.left - margin.right
@@ -22,7 +23,7 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then( data => {
         .range([height-margin.top, 0])
         .domain([0, 45000])
 
-    var svg = d3.select(".chart-1")
+    var svg = d3.select(".chart-4")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
     
@@ -175,7 +176,7 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then( data => {
 })
 
 function createLegend(colors, width){
-    const legend = d3.select(".chart-1").append("svg")
+    const legend = d3.select(".chart-4").append("svg")
     .attr("class","legend")
     .attr("left", "625")
     .attr("x", `${width + 25}`)

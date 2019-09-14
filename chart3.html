@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/assets/stylesheets/chart-styling.css">
+</head>
+<body>
+    <section class="legend" width="100">
+        <svg class="legend-winter-wd" height="20">
+            <circle r="5" fill="#1b5eb8" transform="translate(5,10)"></circle>
+            <text transform="translate(20,15)">Fall/Winter Weekday</text>
+        </svg>
+
+        <br /><svg class="legend-winter-wnd" height="20" y="40">
+            <circle r="5" fill="#0bbae9" transform="translate(5,10)"></circle>
+            <text transform="translate(20,15)">Fall/Winter Weekend</text>
+        </svg>
+
+        <br /><svg class="legend-summer-wd" height="20">
+            <circle r="5" fill="#5eb81b" transform="translate(5,10)"></circle>
+            <text transform="translate(20,15)">Spring/Summer Weekday</text>
+        </svg>
+        
+        <br /><svg class="legend-summer-wnd" height="20">
+            <circle r="5" fill="#ffca00" transform="translate(5,10)"></circle>
+            <text transform="translate(20,15)">Spring/Summer Weekday</text>
+        </svg>
+
+    </section>
+    <br /><svg class="chart-3"></svg>
+    <script src="/assets/javascripts/d3.min.js"></script>
+    <script src="/assets/javascripts/chart-3.js" type="module"></script> 
+</body>
+</html>
