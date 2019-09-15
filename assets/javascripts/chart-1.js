@@ -9,9 +9,7 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
     
     let i = 0
     series.forEach(dataSet => {
-        console.log(dataSet.key)
         dataSet.forEach(dataPint => {
-            console.log(dataPint)
             if ( i < 2){
                 i++
             }
