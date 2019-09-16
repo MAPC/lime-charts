@@ -4,8 +4,8 @@ d3.csv("/assets/data/chart-3.csv").then(function(data) {
 
 function setGraph(data) {
     var margin = {top: 50, right: 75, bottom: 50, left: 75}
-    , width = 700 - margin.left - margin.right
-    , height = 650 - margin.top - margin.bottom;
+    , width = 600 - margin.left - margin.right
+    , height = 425 - margin.top - margin.bottom;
     const colors = ["#1b5eb8", "#0bbae9", "#5eb81b", "#ffca00"]
 
     // 5. X scale will use the index of our data
@@ -24,7 +24,7 @@ function setGraph(data) {
         svg.append("text")
         .attr("class", "graph__title")
         .text("Trip Length by Season and Day of Week")
-        .attr("transform", `translate(100, 15)`)
+        .attr("transform", `translate(135, 15)`)
     
     var graph = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
@@ -37,16 +37,17 @@ function setGraph(data) {
     
     svg.append("text")
         .text("Length (miles)")
-        .attr("transform", `translate(225, ${(height + margin.top + margin.bottom -5)})`)
+        .attr("transform", `translate(250, ${(height + margin.top + margin.bottom -5)})`)
         .attr("class", "axis-label")
 
     graph.append("g")
         .attr("class", "y axis")
-        .call(d3.axisLeft(yScale))
+        .call(d3.axisLeft(yScale)
+        .tickFormat(d3.format("~p"))) 
 
     svg.append("text")
-        .text("Proportion of Trips")
-        .attr("transform", `translate(25, 400) rotate(-90)`)
+        .text("Percentage (%) of Trips")
+        .attr("transform", `translate(25, 300) rotate(-90)`)
         .attr("class", "axis-label")
     
 
@@ -98,7 +99,8 @@ function setGraph(data) {
 function createLegend(){
     const legendEl = document.querySelector(".legend")
     legendEl.addEventListener("click", function(e){
-        switch(e.path[1].classList[0]) {
+        console.log(e)
+        switch(e.target.classList[0]) {
             case "legend-winter-wd":
                 toggleLine('.winter_wd')
                 break

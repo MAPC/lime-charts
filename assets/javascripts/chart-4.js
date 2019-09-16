@@ -1,8 +1,8 @@
 d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then(data => {
 
     var margin = {top: 50, right: 75, bottom: 50, left: 75}
-    , width = 800 - margin.left - margin.right
-    , height = 650 - margin.top - margin.bottom;
+    , width = 700 - margin.left - margin.right
+    , height = 425 - margin.top - margin.bottom;
 
 
     const quarterlyData = data.reduce(function(quarters,month) {
@@ -37,9 +37,14 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then(data => {
         .padding(0.1)
         .domain(data.map( d => { return d._month}))
 
-    var y = d3.scaleLinear()
+    var yQuarterly = d3.scaleLinear()
         .range([height-margin.top, 0])
         .domain([0, 120000])
+    
+    var yMonthly = d3.scaleLinear()
+        .range([height-margin.top, 0])
+        .domain([0, 45000])
+
 
     var svg = d3.select(".chart-4")
         .attr("width", width + margin.left + margin.right)
@@ -56,19 +61,27 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then(data => {
         .attr("height", height-margin.top)
     
     graph.append("g")
-        .call(d3.axisLeft(y)
+        .call(d3.axisLeft(yQuarterly)
         .tickFormat(d3.format("~s")))
+        .attr("class", "yaxis-quarterly")
+
+    graph.append("g")
+        .call(d3.axisLeft(yMonthly)
+        .tickFormat(d3.format("~s")))
+        .attr("class", "yaxis-monthly")
+        .attr("visibility", "hidden")
+    
     
     svg.append("text")
 	.attr("fill", "#000")
-	.attr("transform", "translate(25, 175) rotate(-90)")
+	.attr("transform", "translate(15, 125) rotate(-90)")
 	.attr("text-anchor", "end")
-    .text("Percentage (%) of Rides")
+    .text("Number of Rides")
     .attr("class", "axis-label")
 
     svg.append("text")
 	.attr("fill", "#000")
-	.attr("transform", `translate(375, ${height + margin.top + margin.bottom})`)
+	.attr("transform", `translate(325, ${height + margin.top + margin.bottom})`)
 	.attr("text-anchor", "end")
     .text("Time")
     .attr("class", "axis-label")
@@ -116,6 +129,12 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then(data => {
 
             d3.select('.quarterly')
             .classed("toggle__item-active", false)
+
+            d3.select(".yaxis-monthly")
+            .attr("visibility", "visible")
+
+            d3.select(".yaxis-quarterly")
+            .attr("visibility", "hidden")
         })
     
         toggleQuarters.addEventListener("click", function() {
@@ -136,6 +155,12 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then(data => {
 
             d3.select('.quarterly')
             .classed("toggle__item-active", true)
+
+            d3.select(".yaxis-monthly")
+            .attr("visibility", "hidden")
+
+            d3.select(".yaxis-quarterly")
+            .attr("visibility", "visible")
         })
 
     var colors = ["#1b5eb8", "#5eb81b"]
@@ -171,8 +196,8 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then(data => {
         .data(function(d) { return d; })
         .enter().append("rect")
         .attr("x", function(d) { return xQuarterly(d.data.yr_qtr) })
-        .attr("y", d => { return y(d[1]) })
-        .attr("height", d => Math.abs(y(d[1]) - y(d[0])))
+        .attr("y", d => { return yQuarterly(d[1]) })
+        .attr("height", d => Math.abs(yQuarterly(d[1]) - yQuarterly(d[0])))
         .attr("width", xQuarterly.bandwidth())
 
     const monthlyLayers = graph.selectAll("g.ridetype-monthly")
@@ -186,11 +211,11 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then(data => {
         .data(function(d) { return d; })
         .enter().append("rect")
         .attr("x", function(d) { return xMonthly(d.data._month) })
-        .attr("y", d => { return y(d[1]) })
-        .attr("height", d => Math.abs(y(d[1]) - y(d[0])))
+        .attr("y", d => { return yMonthly(d[1]) })
+        .attr("height", d => Math.abs(yMonthly(d[1]) - yMonthly(d[0])))
         .attr("width", xMonthly.bandwidth())
 
-    //createLegend(colors,width)
+    createLegend(colors,width)
 })
 
 function createLegend(colors, width){

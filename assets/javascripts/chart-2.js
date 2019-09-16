@@ -4,8 +4,8 @@ d3.csv("/assets/data/tod_quarter_dow_copy.csv").then(function(data) {
 
 function setGraph(data) {
     var margin = {top: 50, right: 75, bottom: 50, left: 75}
-    , width = 800 - margin.left - margin.right
-    , height = 650 - margin.top - margin.bottom;
+    , width = 700 - margin.left - margin.right
+    , height = 425 - margin.top - margin.bottom;
     const colors = ["#1b5eb8", "#5eb81b", "#ffca00", "#e9770b", "#0bbae9"]
 
     var parseTime = d3.timeParse("%I%p");
@@ -40,7 +40,7 @@ function setGraph(data) {
         .attr("class", "x axis")
         .attr("transform", "translate(0," + (height - margin.top) + ")")
         .call(d3.axisBottom(xScale)
-            .tickArguments([22, d3.timeFormat("%I%p")]))
+            .tickArguments([18, d3.timeFormat("%I%p")]))
             .selectAll("text")
         .style("text-anchor", "end")
         .attr("dx", "-.8em")
@@ -54,14 +54,14 @@ function setGraph(data) {
     
     svg.append("text")
         .attr("fill", "#000")
-        .attr("transform", "translate(25, 225) rotate(-90)")
+        .attr("transform", "translate(15, 100) rotate(-90)")
         .attr("text-anchor", "end")
         .text("Percentage (%) of Rides")
         .attr("class", "axis-label")
         
     svg.append("text")
         .attr("fill", "#000")
-        .attr("transform", `translate(375, ${height + margin.top +25})`)
+        .attr("transform", `translate(325, ${height + margin.top +25})`)
         .attr("text-anchor", "end")
         .text("Time")
         .attr("class", "axis-label")

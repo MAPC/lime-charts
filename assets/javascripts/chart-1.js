@@ -1,7 +1,7 @@
 d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
     var margin = {top: 50, right: 75, bottom: 50, left: 75}
-    , width = 800 - margin.left - margin.right
-    , height = 650 - margin.top - margin.bottom;
+    , width = 700 - margin.left - margin.right
+    , height = 425 - margin.top - margin.bottom;
 
     var dataset = d3.stack()
         .keys(["ele_prcntg", "mechanical_prcntg"])
@@ -53,14 +53,14 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
     
     svg.append("text")
 	.attr("fill", "#000")
-	.attr("transform", "translate(25, 175) rotate(-90)")
+	.attr("transform", "translate(15, 100) rotate(-90)")
 	.attr("text-anchor", "end")
     .text("Percentage (%) of Rides")
     .attr("class", "axis-label")
 
     svg.append("text")
 	.attr("fill", "#000")
-	.attr("transform", `translate(375, ${height + margin.top + margin.bottom})`)
+	.attr("transform", `translate(325, ${height + margin.top + margin.bottom})`)
 	.attr("text-anchor", "end")
     .text("Time")
     .attr("class", "axis-label")
