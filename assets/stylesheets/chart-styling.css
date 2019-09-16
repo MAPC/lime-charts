@@ -31,3 +31,8 @@
 .toggle__item-active{
     font-style: italic;
 }
+
+.instructions {
+    font-style: italic;
+    font-weight: bold;
+}

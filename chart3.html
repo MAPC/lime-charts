@@ -9,12 +9,17 @@
     <style>
         .legend{
             position: absolute;
-            margin: 75px 550px
+            margin: 75px 550px;
+        }
+
+        .legend-winter-wd, .legend-winter-wnd, .legend-summer-wd, .legend-summer-wnd {
+            width: 190px;
         }
     </style>
 </head>
 <body>
-    <section class="legend" width="100">
+    <section class="legend" width="50">
+        <p class="instructions">Click below to toggle lines</p>
         <svg class="legend-winter-wd" height="20">
             <circle r="5" fill="#1b5eb8" transform="translate(5,10)" class="legend-winter-wd"></circle>
             <text transform="translate(20,15)" class="legend-winter-wd">Fall/Winter Weekday</text>
