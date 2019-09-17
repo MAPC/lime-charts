@@ -36,3 +36,18 @@
     font-style: italic;
     font-weight: bold;
 }
+
+.tooltip{
+    background: #fff;
+  border: 0px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.24);
+  font: 14px sans-serif;
+  padding: 12px;
+  pointer-events: none;
+  position: absolute;
+}
+
+.tooltip__title {
+    font-weight: bold;
+}
