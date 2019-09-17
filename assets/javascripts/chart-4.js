@@ -39,11 +39,11 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then(data => {
         .domain(data.map( d => { return d._month}))
 
     var yQuarterly = d3.scaleLinear()
-        .range([height-margin.top, 0])
+        .range([height-25, 0])
         .domain([0, 120000])
     
     var yMonthly = d3.scaleLinear()
-        .range([height-margin.top, 0])
+        .range([height-25, 0])
         .domain([0, 45000])
 
 
@@ -78,13 +78,6 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then(data => {
 	.attr("transform", "translate(15, 125) rotate(-90)")
 	.attr("text-anchor", "end")
     .text("Number of Rides")
-    .attr("class", "axis-label")
-
-    svg.append("text")
-	.attr("fill", "#000")
-	.attr("transform", `translate(325, ${height + margin.top + margin.bottom})`)
-	.attr("text-anchor", "end")
-    .text("Time")
     .attr("class", "axis-label")
 
     const toggle = svg.append("svg")
@@ -168,7 +161,7 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then(data => {
 
     graph.append("g")
         .attr("class", "xaxis-quarterly")
-        .attr("transform", "translate(0," + (height - margin.top) + ")")
+        .attr("transform", "translate(0," + (height - 25) + ")")
         .call(d3.axisBottom(xQuarterly))
         .selectAll("text")
         .style("text-anchor", "end")
@@ -178,7 +171,7 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then(data => {
     
     graph.append("g")
         .attr("class", "xaxis-monthly")
-        .attr("transform", "translate(0," + (height - margin.top) + ")")
+        .attr("transform", "translate(0," + (height - 25) + ")")
         .attr("visibility","hidden")
         .call(d3.axisBottom(xMonthly))
         .selectAll("text")
