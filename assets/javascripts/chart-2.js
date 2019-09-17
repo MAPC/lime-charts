@@ -28,6 +28,7 @@ function setGraph(data) {
     var graph= svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("class","graph")
+        .attr("width", width)
         
     var xScale = d3.scaleTime()
     .domain([startTime, endTime])
@@ -72,13 +73,15 @@ function setGraph(data) {
         .y(function(d) { return yScale(+d.proportion); })
     
         const tooltip = d3.select('.tooltip');
+        tooltip.style("display","none")
         const tooltipLine = graph.append('line');
 
     const weekdayData = [
         {
-            "linetype": "proportion_q2_2018_wd",
-            "color": "#1b5eb8",
-            "timedata": data.map(tod => {
+            "lineName": "Q2 2018",
+            "color": colors[0],
+            "dayType": "Weekday",
+            "timeData": data.map(tod => {
                 return {
                     "tod": tod.tod,
                     "proportion": tod.proportion_q2_2018_wd
@@ -86,64 +89,114 @@ function setGraph(data) {
             })
         },
         {
-            "linetype": "proportion_q3_2018_wd",
-            "color": "#5eb81b",
-            "timedata": data.map(tod => {
+            "lineName": "Q3 2018",
+            "color": colors[1],
+            "dayType": "Weekday",
+            "timeData": data.map(tod => {
                 return {
                     "tod": tod.tod,
                     "proportion": tod.proportion_q3_2018_wd
                 }
             })   
+        },
+        {
+            "lineName": "Q4 2018",
+            "color": colors[2],
+            "dayType": "Weekday",
+            "timeData": data.map(tod => {
+                return {
+                    "tod": tod.tod,
+                    "proportion": tod.proportion_q4_2018_wd
+                }
+            })   
+        },
+        {
+            "lineName": "Q1 2019",
+            "color": colors[3],
+            "dayType": "Weekday",
+            "timeData": data.map(tod => {
+                return {
+                    "tod": tod.tod,
+                    "proportion": tod.proportion_q1_2019_wd
+                }
+            })   
+        },
+        {
+            "lineName": "Q2 2019",
+            "color": colors[4],
+            "dayType": "Weekday",
+            "timeData": data.map(tod => {
+                return {
+                    "tod": tod.tod,
+                    "proportion": tod.proportion_q2_2019_wd
+                }
+            })   
         }
-        // data.map(function(d) {
-        //     return {"x": parseTime(d.tod),
-        //             "y": d.proportion_q3_2018_wd,
-        //             "tooltipData": d,
-        //             "color": colors[1] } }),
-        // data.map(function(d) {
-        //     return {"x": parseTime(d.tod),
-        //             "y": d.proportion_q4_2018_wd,
-        //             "color": colors[2] } }),
-        // data.map(function(d) {
-        //     return {"x": parseTime(d.tod),
-        //             "y": d.proportion_q1_2019_wd,
-        //             "color": colors[3] } }),
-        // data.map(function(d) {
-        //     return {"x": parseTime(d.tod),
-        //             "y": d.proportion_q2_2019_wd,
-        //             "color": colors[4] } })
-        
     ]
 
     const weekendData = [
-        data.map(function(d) {
-            return {"x": parseTime(d.tod),
-                    "y": d.proportion_q2_2018_wnd,
-                    "color": colors[0] } }),
-        data.map(function(d) {
-            return {"x": parseTime(d.tod),
-                    "y": d.proportion_q3_2018_wnd,
-                    "color": colors[1] } }),
-        data.map(function(d) {
-            return {"x": parseTime(d.tod),
-                    "y": d.proportion_q4_2018_wnd,
-                    "color": colors[2] } }),
-        data.map(function(d) {
-            return {"x": parseTime(d.tod),
-                    "y": d.proportion_q1_2019_wnd,
-                    "color": colors[3] } }),
-        data.map(function(d) {
-            return {"x": parseTime(d.tod),
-                    "y": d.proportion_q2_2019_wnd,
-                    "color": colors[4] } })
-        
+        {
+            "lineName": "Q2 2018",
+            "color": colors[0],
+            "dayType": "Weekend",
+            "timeData": data.map(tod => {
+                return {
+                    "tod": tod.tod,
+                    "proportion": tod.proportion_q2_2018_wnd
+                }
+            })
+        },
+        {
+            "lineName": "Q3 2018",
+            "color": colors[1],
+            "dayType": "Weekend",
+            "timeData": data.map(tod => {
+                return {
+                    "tod": tod.tod,
+                    "proportion": tod.proportion_q3_2018_wnd
+                }
+            })   
+        },
+        {
+            "lineName": "Q4 2018",
+            "color": colors[2],
+            "dayType": "Weekend",
+            "timeData": data.map(tod => {
+                return {
+                    "tod": tod.tod,
+                    "proportion": tod.proportion_q4_2018_wnd
+                }
+            })   
+        },
+        {
+            "lineName": "Q1 2019",
+            "color": colors[3],
+            "dayType": "Weekend",
+            "timeData": data.map(tod => {
+                return {
+                    "tod": tod.tod,
+                    "proportion": tod.proportion_q1_2019_wnd
+                }
+            })   
+        },
+        {
+            "lineName": "Q2 2019",
+            "color": colors[4],
+            "dayType": "Weekend",
+            "timeData": data.map(tod => {
+                return {
+                    "tod": tod.tod,
+                    "proportion": tod.proportion_q2_2019_wnd
+                }
+            })   
+        }
     ]
 
     const toggleWeekday = document.querySelector("input[value='weekday']")
     const toggleWeekend = document.querySelector("input[value='weekend']")
 
     let tipBox = graph.append('rect')
-    .attr('width', width)
+    .attr('width', width - margin.left + 15)
     .attr('height', height)
     .attr('opacity', 0)
     .on('mousemove', function(d){
@@ -156,7 +209,7 @@ function setGraph(data) {
         .attr("y1", 0)
         .attr("y2", height - margin.top)
 
-        tooltip.html(convertTime(time))
+        tooltip.html(convertTime(time) + ", " + weekdayData[0].dayType)
         .style('display', 'block')
         .style('left', d3.event.pageX + 20)
         .style('top', d3.event.pageY - 20)
@@ -165,22 +218,27 @@ function setGraph(data) {
         .append('div')
         .style('color', d => d.color)
         .html(function(d){
-            const proportion = d.timedata.find(element => element.tod == convertTime(time)).proportion
-            return d.linetype + ': ' + (parseFloat(proportion) * 100).toFixed(2) + "%"
+            const proportion = d.timeData.find(element => element.tod == convertTime(time)).proportion
+            return d.lineName + ': ' + (parseFloat(proportion) * 100).toFixed(2) + "%"
         })
 
         tooltip.style("left", (event.clientX + 20) + "px")
         tooltip.style("top", (event.clientY) + "px");
     })
-
+    .on('mouseout', function(d){
+        console.log("out!")
+        if (tooltip) tooltip.style('display', 'none');
+        if (tooltipLine) tooltipLine.attr('stroke', 'none');
+    })
     graph.selectAll(".line")
     .data(weekdayData).enter()
     .append("path")
     .attr('fill', 'none')
     .attr('stroke', d => d.color)
     .attr('stroke-width', 2)
-    .datum(d => d.timedata)
-    .attr('d', line);
+    .datum(d => d.timeData)
+    .attr('d', line)
+    .attr("class", "line");
 
             
 
@@ -189,30 +247,34 @@ function setGraph(data) {
         d3.select(".graph")
         .selectAll(".line")
         .remove()
-        weekdayData.forEach(dataset => {
-            graph.append("path")
-            .datum(dataset)
-            .attr("class", "line")
-            .attr("d", line)
-            .attr("fill", "none")
-            .attr("stroke", dataset[0].color)
-            .attr("stroke-width", "2.5")
-        })
+
+        graph.selectAll(".line")
+        .data(weekdayData).enter()
+        .append("path")
+        .attr('fill', 'none')
+        .attr('stroke', d => d.color)
+        .attr('stroke-width', 2)
+        .datum(d => d.timeData)
+        .attr('d', line)
+        .attr("class", "line");
+
     })
 
     toggleWeekend.addEventListener("click", function(e) {
         d3.select(".graph")
         .selectAll(".line")
         .remove()
-        weekendData.forEach(dataset => {
-            graph.append("path")
-            .datum(dataset)
-            .attr("class", "line")
-            .attr("d", line)
-            .attr("fill", "none")
-            .attr("stroke", dataset[0].color)
-            .attr("stroke-width", "2.5");
-        })
+        
+        graph.selectAll(".line")
+        .data(weekendData).enter()
+        .append("path")
+        .attr('fill', 'none')
+        .attr('stroke', d => d.color)
+        .attr('stroke-width', 2)
+        .datum(d => d.timeData)
+        .attr('d', line)
+        .attr("class", "line");
+
     })
 
     createLegend(colors, width)
