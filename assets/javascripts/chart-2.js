@@ -16,8 +16,6 @@ function setGraph(data) {
     let endTime = new Date(1900,0,1)
     endTime.setHours(23)
 
-    console.log(startTime.getHours())
-
     var svg = d3.select(".chart-2")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -73,7 +71,7 @@ function setGraph(data) {
         .x(function(d, i) { return xScale(parseTime(d.tod)); })
         .y(function(d) { return yScale(+d.proportion); })
     
-        const tooltip = d3.select('#tooltip');
+        const tooltip = d3.select('.tooltip');
         const tooltipLine = graph.append('line');
 
     const weekdayData = [
@@ -87,11 +85,16 @@ function setGraph(data) {
                 }
             })
         },
-        // data.map(function(d) {
-        //     return {"x": parseTime(d.tod),
-        //             "y": d.proportion_q2_2018_wd,
-        //             "tooltipData": d,
-        //             "color": colors[0] } }),
+        {
+            "linetype": "proportion_q3_2018_wd",
+            "color": "#5eb81b",
+            "timedata": data.map(tod => {
+                return {
+                    "tod": tod.tod,
+                    "proportion": tod.proportion_q3_2018_wd
+                }
+            })   
+        }
         // data.map(function(d) {
         //     return {"x": parseTime(d.tod),
         //             "y": d.proportion_q3_2018_wd,
@@ -147,7 +150,6 @@ function setGraph(data) {
         const time = xScale.invert(d3.mouse(tipBox.node())[0]).getHours()
         let tipTime = new Date(1900,0,1).setHours(time)
 
-        console.log(time)
         tooltipLine.attr("stroke", "black")
         .attr("x1", xScale(tipTime) +.5)
         .attr("x2", xScale(tipTime) + .5)
@@ -162,10 +164,14 @@ function setGraph(data) {
         .data(weekdayData).enter()
         .append('div')
         .style('color', d => d.color)
-        .html(d => d.linetype + ': ' + d.timedata[7].tod)
-    })
+        .html(function(d){
+            const proportion = d.timedata.find(element => element.tod == convertTime(time)).proportion
+            return d.linetype + ': ' + (parseFloat(proportion) * 100).toFixed(2) + "%"
+        })
 
-    console.log(weekdayData)
+        tooltip.style("left", (event.clientX + 20) + "px")
+        tooltip.style("top", (event.clientY) + "px");
+    })
 
     graph.selectAll(".line")
     .data(weekdayData).enter()
@@ -272,14 +278,6 @@ function createLegend(colors, width){
     .text("Q2 2019")
 }
 
-function createToolTip(data){
-    //const time = Math.floor(xScale.insert(d3.mouse()))
-    //console.log(data)
-    return "<span class='tooltip__title'>" + "Test" + "</span>"
-    // + "<br/> Total number of rides: " + data.total_count.toLocaleString() 
-    // + "<br />Mechanical bike rides: " + data.mechanical.toLocaleString() + ` (${((data.mechanical / data.total_count) * 100).toFixed(2)}%)`
-    // + "<br />E-Bike rides: " + data.ele_assis.toLocaleString() + ` (${((data.ele_assis / data.total_count)* 100).toFixed(2)}%)`
-}
 
 function convertTime(hour){
     if (hour === 0) { return "12AM"}
