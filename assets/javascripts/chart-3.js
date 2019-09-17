@@ -1,12 +1,55 @@
+const colors = ["#1b5eb8", "#0bbae9", "#5eb81b", "#ffca00"]
+
 d3.csv("/assets/data/chart-3.csv").then(function(data) {
-    setGraph(data)
+    const formattedData = [
+        {
+            "lineName": "Fall/Winter Weekday",
+            "color": colors[0],
+            "rideLengths": data.map(row => {
+                return {
+                    "length": row.bin_center,
+                    "proportion": row.proportion_winter_wd
+                }
+            })
+        },
+        {
+            "lineName": "Fall/Winter Weekend",
+            "color": colors[1],
+            "rideLengths": data.map(row => {
+                return {
+                    "length": row.bin_center,
+                    "proportion": row.proportion_winter_wnd
+                }
+            })
+        },
+        {
+            "lineName": "Spring/Summer Weekday",
+            "color": colors[2],
+            "rideLengths": data.map(row => {
+                return {
+                    "length": row.bin_center,
+                    "proportion": row.proportion_summer_wd
+                }
+            })
+        },
+        {
+            "lineName": "Spring/Summer Weekend",
+            "color": colors[3],
+            "rideLengths": data.map(row => {
+                return {
+                    "length": row.bin_center,
+                    "proportion": row.proportion_summer_wnd
+                }
+            })
+        }
+    ]
+    setGraph(formattedData)
 })
 
 function setGraph(data) {
     var margin = {top: 50, right: 75, bottom: 50, left: 75}
     , width = 600 - margin.left - margin.right
     , height = 425 - margin.top - margin.bottom;
-    const colors = ["#1b5eb8", "#0bbae9", "#5eb81b", "#ffca00"]
 
     // 5. X scale will use the index of our data
     var xScale = d3.scaleLinear()
@@ -52,46 +95,19 @@ function setGraph(data) {
     
 
     const line = d3.line()
-        .x(function(d) { return xScale(+d.bin_center); })
-        .y(function(d) { return yScale(d.y); })
+        .x(function(d) { return xScale(+d.length); })
+        .y(function(d) { return yScale(d.proportion); })
 
-
-    const dataArray = [
-        data.map(function(d) {
-            return {"bin_center": d.bin_center,
-                    "y": d.proportion_winter_wd,
-                    "color": colors[0],
-                    "title": "Fall/Winter Weekdays",
-                    "class": "winter_wd" } }),
-        data.map(function(d) {
-            return {"bin_center": d.bin_center,
-                    "y": d.proportion_winter_wnd,
-                    "color": colors[1],
-                    "title": "Fall/Winter Weekends",
-                    "class": "winter_wnd" } }),
-        data.map(function(d) {
-            return {"bin_center": d.bin_center,
-                    "y": d.proportion_summer_wd,
-                    "color": colors[2],
-                    "title": "Spring/Summer Weekdays",
-                    "class": "summer_wd" } }),
-        data.map(function(d) {
-            return { "bin_center": d.bin_center,
-                    "y": d.proportion_summer_wnd,
-                    "color": colors[3],
-                    "title": "Spring/Summer Weekends",
-                    "class": "summer_wnd" } })
-    ]
-
-    dataArray.forEach(dataset => {
-        graph.append("path")
-        .datum(dataset)
-        .attr("class", `${dataset[0].class} line`)
-        .attr("d", line)
-        .attr("fill", "none")
-        .attr("stroke", dataset[0].color)
-        .attr("stroke-width", "2")
-    })
+    const classNames = ['winter_wd', 'winter_wnd', 'summer_wd', 'summer_wnd']
+    graph.selectAll(".line")
+        .data(data).enter()
+        .append("path")
+        .attr('fill', 'none')
+        .attr('stroke', d => d.color)
+        .attr('stroke-width', 2)
+        .datum(d => d.rideLengths)
+        .attr('d', line)
+        .attr("class", function(d, i) { return classNames[i]});
 
     createLegend()
 }
