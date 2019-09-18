@@ -51,7 +51,7 @@ function getRange(xDomain, width){
     const max = xDomain[xDomain.length-1]
     const xRange = xDomain.map(value => {
         return {"pixelWidth": (+value * width)/max,
-                  "bin": value   
+                  "bin": +value   
         } 
     })
     return xRange
@@ -59,13 +59,17 @@ function getRange(xDomain, width){
 
 function setGraph(data, xDomain) {
     var margin = {top: 50, right: 75, bottom: 50, left: 75}
-    , width = 1200 - margin.left - margin.right
+    , width = 700 - margin.left - margin.right
     , height = 425 - margin.top - margin.bottom;
     
     var xScale = d3.scaleLinear()
     .domain([0.1249082725, 6.150940827])
     .range([0, width])
-    //.range(getRange(xDomain, width))
+    .clamp(true)
+    // var xScale = d3.scaleBand()
+    // .domain(xDomain)
+    // .range(getRange(xDomain, width))
+
 
     console.log(getRange(xDomain, width))
 
@@ -95,7 +99,8 @@ function setGraph(data, xDomain) {
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(xScale)
         .tickFormat(d3.format(".3"))
-        .ticks(d3.ticks(49)))
+        .tickValues(xDomain)
+        )
         .selectAll("text")
         .style("text-anchor", "end")
         .attr("dx", "-.8em")
@@ -144,15 +149,15 @@ function setGraph(data, xDomain) {
         .attr('height', height)
         .attr('opacity', 0)
         .on('mousemove', function(d){
-            const xValue = d3.event.pageX - 60
+            const xValue = d3.event.pageX - 70
             const lengthBin = rangeDict.filter ( row => row.pixelWidth < xValue)[0].bin
-        //     console.log(rangeDict.filter ( row => row.pixelWidth < xValue)[0])
-        //    console.log(xValue)
+            const linePosition = rangeDict.filter ( row => row.pixelWidth < xValue)[0].pixelWidth - 11.1689889
+       
 
-        console.log(lengthBin)
+        console.log(linePosition)
             tooltipLine.attr("stroke", "black")
-            .attr("x1", xValue)
-            .attr("x2", xValue)
+            .attr("x1", linePosition)
+            .attr("x2", linePosition)
             .attr("y1", 0)
             .attr("y2", height)
     
