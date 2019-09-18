@@ -1,6 +1,6 @@
 const colors = ["#1b5eb8", "#0bbae9", "#5eb81b", "#ffca00"]
 
-d3.csv("/assets/data/chart-3-m.csv").then(function(data) {
+d3.csv("/assets/data/chart-3.csv").then(function(data) {
     const xDomain = data.map(row => +row.bin_center)
     const formattedData = [
         {
@@ -57,13 +57,17 @@ function getRange(xDomain, width){
     return xRange
 }
 
+function getTicks(dataSet){
+    return dataSet.map(row => +row.bin)
+}
+
 function setGraph(data, xDomain) {
     var margin = {top: 50, right: 75, bottom: 50, left: 75}
-    , width = 700 - margin.left - margin.right
+    , width = 600 - margin.left - margin.right
     , height = 425 - margin.top - margin.bottom;
     
     var xScale = d3.scaleLinear()
-    .domain([0, 9800])
+    .domain([0, 6.2])
     .range([0, width])
     .clamp(true)
 
@@ -94,12 +98,13 @@ function setGraph(data, xDomain) {
     graph.append("g")
         .attr("class", "x-axis")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale))
+        .call(d3.axisBottom(xScale)
+        )
         .selectAll("text")
         .style("text-anchor", "end")
         .attr("dx", "-.8em")
         .attr("dy", ".15em")
-        .attr("transform", "rotate(-65)");
+        .attr("transform", "rotate(-65)")
     
     svg.append("text")
         .text("Length (miles)")
@@ -126,9 +131,6 @@ function setGraph(data, xDomain) {
 
     const classNames = ['winter_wd', 'winter_wnd', 'summer_wd', 'summer_wnd']
     const rangeDict = getRange(xDomain, width)
-    
-    let numTicks = 49
-    let pixelInterval = xScale()
 
     graph.selectAll(".line")
     .data(data).enter()
@@ -140,7 +142,6 @@ function setGraph(data, xDomain) {
     .attr('d', line)
     .attr("class", function(d, i) { return classNames[i]});
 
-    //rangeDict.map(row => console.log(row))
 
     let tipBox = graph.append('rect')
     .attr('width', width)
@@ -157,7 +158,8 @@ function setGraph(data, xDomain) {
         .attr("y1", 0)
         .attr("y2", height)
 
-        tooltip.html("At ")
+        console.log()
+        tooltip.html("At " + lengthBin.toFixed(2) + " miles:")
         .style('display', 'block')
         .style('left', d3.event.pageX + 20)
         .style('top', d3.event.pageY - 20)
@@ -166,7 +168,6 @@ function setGraph(data, xDomain) {
         .append('div')
         .style('color', d => d.color)
         .html(function(d){
-            //console.log(d)
             return d.lineName + ": " + (parseFloat(d.rideLengths.find(el => el.bin == lengthBin).proportion) * 100).toFixed(2) + "%"
         })
 
