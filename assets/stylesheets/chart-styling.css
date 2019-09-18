@@ -1,5 +1,5 @@
 .tick > text {
-    font-size: 10px;
+    font-size: 14px;
 }
 
 .axis-label {
@@ -52,16 +52,12 @@
     font-weight: bold;
 }
 
+.tooltip__circle {
+    width: 15px;
+    height: 15px;
+}
+
 .overlay {
     fill: none;
     pointer-events: all;
 }
-
-/* .x-axis > .tick{
-    display: none;
-}
-
-*/
-/* .x-axis > .tick:nth-child(even){
-    display: none;
-}  */

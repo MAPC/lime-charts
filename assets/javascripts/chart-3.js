@@ -71,13 +71,6 @@ function setGraph(data, xDomain) {
     .range([0, width])
     .clamp(true)
 
-
-    console.log(getRange(xDomain, width))
-
-    var xInvert = d3.scaleOrdinal()
-    .domain(xScale.range())
-    .range(xScale.domain())
-
     // 6. Y scale will use the randomly generate number 
     var yScale = d3.scaleLinear()
         .domain([0, .1]) // input 
@@ -153,22 +146,21 @@ function setGraph(data, xDomain) {
         const linePosition = rangeDict.filter ( row => xPixelsAcross <= +row.pixelWidth)[0].pixelWidth
 
         tooltipLine.attr("stroke", "black")
+        .attr("stroke-width", "2")
         .attr("x1", linePosition)
         .attr("x2", linePosition)
         .attr("y1", 0)
         .attr("y2", height)
 
-        console.log()
-        tooltip.html("At " + lengthBin.toFixed(2) + " miles:")
+        tooltip.html("<span class='tooltip__title'>At approx. " + lengthBin.toFixed(2) + " miles:" + "</span>")
         .style('display', 'block')
         .style('left', d3.event.pageX + 20)
         .style('top', d3.event.pageY - 20)
         .selectAll()
         .data(data).enter()
         .append('div')
-        .style('color', d => d.color)
         .html(function(d){
-            return d.lineName + ": " + (parseFloat(d.rideLengths.find(el => el.bin == lengthBin).proportion) * 100).toFixed(2) + "%"
+            return `<svg class='tooltip__circle'><circle r='5' fill=${d.color} transform='translate(5,9)'></cirlce> </svg>` + d.lineName + ": " + (parseFloat(d.rideLengths.find(el => el.bin == lengthBin).proportion) * 100).toFixed(2) + "%"
         })
 
         tooltip.style("left", (event.clientX + 20) + "px")
@@ -179,13 +171,12 @@ function setGraph(data, xDomain) {
         if (tooltipLine) tooltipLine.attr('stroke', 'none');
     })
 
-    //createLegend()
+    createLegend()
 }
 
 function createLegend(){
     const legendEl = document.querySelector(".legend")
     legendEl.addEventListener("click", function(e){
-        console.log(e)
         switch(e.target.classList[0]) {
             case "legend-winter-wd":
                 toggleLine('.winter_wd')

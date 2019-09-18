@@ -29,6 +29,7 @@ function setGraph(data) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("class","graph")
         .attr("width", width)
+        .attr("height", height)
         
     var xScale = d3.scaleTime()
     .domain([startTime, endTime])
@@ -36,11 +37,11 @@ function setGraph(data) {
 
     var yScale = d3.scaleLinear()
         .domain([0, .1])
-        .range([height-margin.top, 0]);
+        .range([height, 0]);
 
     graph.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + (height - margin.top) + ")")
+        .attr("transform", "translate(0," + (height) + ")")
         .call(d3.axisBottom(xScale)
             .tickArguments([18, d3.timeFormat("%-I%p")]))
             .selectAll("text")
@@ -59,13 +60,6 @@ function setGraph(data) {
         .attr("transform", "translate(15, 100) rotate(-90)")
         .attr("text-anchor", "end")
         .text("Percentage (%) of Rides")
-        .attr("class", "axis-label")
-        
-    svg.append("text")
-        .attr("fill", "#000")
-        .attr("transform", `translate(325, ${height + margin.top +25})`)
-        .attr("text-anchor", "end")
-        .text("Time")
         .attr("class", "axis-label")
         
     const line = d3.line()
@@ -204,22 +198,22 @@ function setGraph(data) {
         let tipTime = new Date(1900,0,1).setHours(time)
 
         tooltipLine.attr("stroke", "black")
+        .attr("stroke-width", "2")
         .attr("x1", xScale(tipTime) +.5)
         .attr("x2", xScale(tipTime) + .5)
         .attr("y1", 0)
-        .attr("y2", height - margin.top)
+        .attr("y2", height)
 
-        tooltip.html(convertTime(time) + ", " + weekdayData[0].dayType)
+        tooltip.html("<span class='tooltip__title'>" + convertTime(time) + ", " + weekdayData[0].dayType + "</span>")
         .style('display', 'block')
         .style('left', d3.event.pageX + 20)
         .style('top', d3.event.pageY - 20)
         .selectAll()
         .data(weekdayData).enter()
         .append('div')
-        .style('color', d => d.color)
         .html(function(d){
             const proportion = d.timeData.find(element => element.tod == convertTime(time)).proportion
-            return d.lineName + ': ' + (parseFloat(proportion) * 100).toFixed(2) + "%"
+            return `<svg class='tooltip__circle'><circle r='5' fill=${d.color} transform='translate(5,9)'></cirlce> </svg>` + d.lineName + ': ' + (parseFloat(proportion) * 100).toFixed(2) + "%"
         })
 
         tooltip.style("left", (event.clientX + 20) + "px")
@@ -235,9 +229,7 @@ function setGraph(data) {
     .attr('fill', 'none')
     .attr('stroke', d => d.color)
     .attr('stroke-width', 2)
-    .datum(d => {
-        console.log(d.timeData)
-        return d.timeData})
+    .datum(d => { return d.timeData })
     .attr('d', line)
     .attr("class", "line");
 
