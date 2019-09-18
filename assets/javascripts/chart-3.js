@@ -50,77 +50,72 @@ d3.csv("/assets/data/chart-3.csv").then(function(data) {
 function getRange(xDomain, width){
     const max = xDomain[xDomain.length-1]
     const xRange = xDomain.map(value => {
-        return {"pixelWidth": (+value * width)/max,
-                  "bin": +value   
+        return {
+            "pixelWidth": (+value * width)/max,
+            "bin": +value   
         } 
     })
     return xRange
 }
 
-function getTicks(dataSet){
-    return dataSet.map(row => +row.bin)
-}
-
 function setGraph(data, xDomain) {
-    var margin = {top: 50, right: 75, bottom: 50, left: 75}
+    const margin = {top: 50, right: 75, bottom: 50, left: 75}
     , width = 600 - margin.left - margin.right
     , height = 425 - margin.top - margin.bottom;
     
-    var xScale = d3.scaleLinear()
+    const xScale = d3.scaleLinear()
     .domain([0, 6.2])
     .range([0, width])
     .clamp(true)
 
-    // 6. Y scale will use the randomly generate number 
-    var yScale = d3.scaleLinear()
-        .domain([0, .1]) // input 
-        .range([height-25, 0]); // output
+    const yScale = d3.scaleLinear()
+    .domain([0, .1])
+    .range([height-25, 0])
 
-    var svg = d3.select(".chart-3")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        svg.append("text")
-        .attr("class", "graph__title")
-        .text("Trip Length by Season and Day of Week")
-        .attr("transform", `translate(135, 15)`)
-    
-    var graph = svg.append("g")
-        .attr("transform", "translate(" + (margin.left) + "," + margin.top + ")")
-        .attr("class","graph")
-
-    graph.append("g")
-        .attr("class", "x-axis")
-        .attr("transform", "translate(0," + (height-25) + ")")
-        .call(d3.axisBottom(xScale)
-        )
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", "rotate(-65)")
+    const svg = d3.select(".chart-3")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
     
     svg.append("text")
-        .text("Length (miles)")
-        .attr("transform", `translate(250, ${(height + margin.top + margin.bottom -5)})`)
-        .attr("class", "axis-label")
+    .attr("class", "graph__title")
+    .text("Trip Length by Season and Day of Week")
+    .attr("transform", `translate(135, 15)`)
+    
+    const graph = svg.append("g")
+    .attr("transform", "translate(" + (margin.left) + "," + margin.top + ")")
+    .attr("class","graph")
 
     graph.append("g")
-        .attr("class", "y axis")
-        .call(d3.axisLeft(yScale)
-        .tickFormat(d3.format("~p"))) 
+    .attr("class", "x-axis")
+    .attr("transform", "translate(0," + (height-25) + ")")
+    .call(d3.axisBottom(xScale))
+    .selectAll("text")
+    .style("text-anchor", "end")
+    .attr("dx", "-.8em")
+    .attr("dy", ".15em")
+    .attr("transform", "rotate(-65)")
+    
+    svg.append("text")
+    .text("Length (miles)")
+    .attr("transform", `translate(250, ${(height + margin.top + margin.bottom -5)})`)
+    .attr("class", "axis-label")
+
+    graph.append("g")
+    .attr("class", "y axis")
+    .call(d3.axisLeft(yScale)
+    .tickFormat(d3.format("~p"))) 
 
     svg.append("text")
-        .text("Percentage (%) of Trips")
-        .attr("transform", `translate(25, 300) rotate(-90)`)
-        .attr("class", "axis-label")
+    .text("Percentage (%) of Trips")
+    .attr("transform", `translate(25, 300) rotate(-90)`)
+    .attr("class", "axis-label")
     
-    const tooltip = d3.select('.tooltip');
-    tooltip.style("display","none")
+    const tooltip = d3.select('.tooltip').style("display","none")
     const tooltipLine = graph.append('line');
 
     const line = d3.line()
-        .x(function(d) { return xScale(+d.bin); })
-        .y(function(d) { return yScale(+d.proportion); })
+    .x(function(d) { return xScale(+d.bin); })
+    .y(function(d) { return yScale(+d.proportion); })
 
     const classNames = ['winter_wd', 'winter_wnd', 'summer_wd', 'summer_wnd']
     const rangeDict = getRange(xDomain, width)
@@ -136,7 +131,7 @@ function setGraph(data, xDomain) {
     .attr("class", function(d, i) { return classNames[i]});
 
 
-    let tipBox = graph.append('rect')
+    const tipBox = graph.append('rect')
     .attr('width', width)
     .attr('height', height)
     .attr('opacity', 0)
@@ -177,7 +172,6 @@ function setGraph(data, xDomain) {
 function createLegend(){
     const legendEl = document.querySelector(".legend")
     legendEl.addEventListener("click", function(e){
-        console.log(e)
         switch(e.target.classList[0]) {
             case "legend-winter-wd":
                 toggleLine('.winter_wd')

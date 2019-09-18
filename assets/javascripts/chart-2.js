@@ -4,71 +4,66 @@ d3.csv("/assets/data/tod_quarter_dow_copy.csv").then(function(data) {
 
 
 function setGraph(data) {
-    var margin = {top: 50, right: 75, bottom: 50, left: 75}
+    const margin = {top: 50, right: 75, bottom: 50, left: 75}
     , width = 700 - margin.left - margin.right
     , height = 425 - margin.top - margin.bottom;
     const colors = ["#1b5eb8", "#5eb81b", "#ffca00", "#e9770b", "#0bbae9"]
-
-    var parseTime = d3.timeParse("%-I%p");
-
-    let startTime = new Date(1900,0,1)
-    startTime.setHours(0)
-    let endTime = new Date(1900,0,1)
-    endTime.setHours(23)
-
-    var svg = d3.select(".chart-2")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+    const parseTime = d3.timeParse("%-I%p");
+    const startTime = new Date(1900,0,1).setHours(0)
+    const endTime = new Date(1900,0,1).setHours(23)
+    
+    const svg = d3.select(".chart-2")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
     
     svg.append("text")
-        .attr("class", "graph__title")
-        .text("Hourly Pattern of Trips by Quarter on Weekdays or Weekends")
-        .attr("transform", `translate(75, 15)`)
+    .attr("class", "graph__title")
+    .text("Hourly Pattern of Trips by Quarter on Weekdays or Weekends")
+    .attr("transform", `translate(75, 15)`)
 
-    var graph= svg.append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .attr("class","graph")
-        .attr("width", width)
-        .attr("height", height)
+    const graph= svg.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    .attr("class","graph")
+    .attr("width", width)
+    .attr("height", height)
         
-    var xScale = d3.scaleTime()
+    const xScale = d3.scaleTime()
     .domain([startTime, endTime])
     .range([0, width - margin.right])
 
-    var yScale = d3.scaleLinear()
-        .domain([0, .1])
-        .range([height, 0]);
+    const yScale = d3.scaleLinear()
+    .domain([0, .1])
+    .range([height, 0]);
 
     graph.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + (height) + ")")
-        .call(d3.axisBottom(xScale)
-            .tickArguments([18, d3.timeFormat("%-I%p")]))
-            .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", "rotate(-65)");
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + (height) + ")")
+    .call(d3.axisBottom(xScale)
+        .tickArguments([18, d3.timeFormat("%-I%p")]))
+        .selectAll("text")
+    .style("text-anchor", "end")
+    .attr("dx", "-.8em")
+    .attr("dy", ".15em")
+    .attr("transform", "rotate(-65)");
 
     graph.append("g")
-        .attr("class", "y axis")
-        .call(d3.axisLeft(yScale)
-        .tickFormat(d3.format("~p"))) 
+    .attr("class", "y axis")
+    .call(d3.axisLeft(yScale)
+    .tickFormat(d3.format("~p"))) 
     
     svg.append("text")
-        .attr("fill", "#000")
-        .attr("transform", "translate(15, 100) rotate(-90)")
-        .attr("text-anchor", "end")
-        .text("Percentage (%) of Rides")
-        .attr("class", "axis-label")
+    .attr("fill", "#000")
+    .attr("transform", "translate(15, 100) rotate(-90)")
+    .attr("text-anchor", "end")
+    .text("Percentage (%) of Rides")
+    .attr("class", "axis-label")
         
     const line = d3.line()
-        .x(function(d, i) { return xScale(parseTime(d.tod)); })
-        .y(function(d) { return yScale(+d.proportion); })
+    .x(function(d, i) { return xScale(parseTime(d.tod)); })
+    .y(function(d) { return yScale(+d.proportion); })
     
-        const tooltip = d3.select('.tooltip');
-        tooltip.style("display","none")
-        const tooltipLine = graph.append('line');
+    const tooltip = d3.select('.tooltip').style("display","none")
+    const tooltipLine = graph.append('line');
 
     const weekdayData = [
         {
@@ -195,7 +190,7 @@ function setGraph(data) {
     .attr('opacity', 0)
     .on('mousemove', function(d){
         const time = xScale.invert(d3.mouse(tipBox.node())[0]).getHours()
-        let tipTime = new Date(1900,0,1).setHours(time)
+        const tipTime = new Date(1900,0,1).setHours(time)
 
         tooltipLine.attr("stroke", "black")
         .attr("stroke-width", "2")
@@ -223,6 +218,7 @@ function setGraph(data) {
         if (tooltip) tooltip.style('display', 'none');
         if (tooltipLine) tooltipLine.attr('stroke', 'none');
     })
+
     graph.selectAll(".line")
     .data(weekdayData).enter()
     .append("path")
@@ -232,10 +228,6 @@ function setGraph(data) {
     .datum(d => { return d.timeData })
     .attr('d', line)
     .attr("class", "line");
-
-
-            
-
     
     toggleWeekday.addEventListener("click", function(e) {
         d3.select(".graph")

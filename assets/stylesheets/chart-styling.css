@@ -12,8 +12,9 @@
     font-weight: bold;
 }
 
-.legend {
-    display: inline-block;
+  .legend{
+    position: absolute;
+    margin: 50px 550px;
 }
 .legend__title, .toggle__title{
     font-size: 16px;
@@ -125,8 +126,6 @@ form {
   input:checked + .summer-wnd {
     background-color: #ffca00;
   }
-
-
   
   input:checked + .slider:before {
     -webkit-transform: translateX(12px);
@@ -134,7 +133,6 @@ form {
     transform: translateX(12px);
   }
   
-  /* Rounded sliders */
   .slider.round {
     border-radius: 14px;
   }
