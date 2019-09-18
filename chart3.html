@@ -4,41 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Trip Length by Season and Day of Week</title>
     <link rel="stylesheet" href="/assets/stylesheets/chart-styling.css">
     <style>
         .legend{
             position: absolute;
             margin: 75px 550px;
         }
-
-        .legend-winter-wd, .legend-winter-wnd, .legend-summer-wd, .legend-summer-wnd {
-            width: 190px;
-        }
     </style>
 </head>
 <body>
     <section class="legend" width="50">
-        <p class="instructions">Click below to toggle lines</p>
-        <svg class="legend-winter-wd" height="20">
-            <circle r="5" fill="#1b5eb8" transform="translate(5,10)" class="legend-winter-wd"></circle>
-            <text transform="translate(20,15)" class="legend-winter-wd">Fall/Winter Weekday</text>
-        </svg>
+        <div ><label class="switch">
+                <input type="checkbox" checked class="legend-winter-wd">
+                <span class="slider round winter-wd"></span>
+            </label> Fall/Winter Weekday</div>
 
-        <br /><svg class="legend-winter-wnd" height="20" y="40">
-            <circle r="5" fill="#0bbae9" transform="translate(5,10)" class="legend-winter-wnd"></circle>
-            <text transform="translate(20,15)" class="legend-winter-wnd">Fall/Winter Weekend</text>
-        </svg>
+        <div ><label class="switch">
+            <input type="checkbox" checked class="legend-winter-wnd">
+            <span class="slider round winter-wnd"></span>
+        </label> Fall/Winter Weekend</div>
 
-        <br /><svg class="legend-summer-wd" height="20">
-            <circle r="5" fill="#5eb81b" transform="translate(5,10)" class="legend-summer-wd"></circle>
-            <text transform="translate(20,15)" class="legend-summer-wd">Spring/Summer Weekday</text>
-        </svg>
-        
-        <br /><svg class="legend-summer-wnd" height="20">
-            <circle r="5" fill="#ffca00" transform="translate(5,10)" class="legend-summer-wnd"></circle>
-            <text transform="translate(20,15)" class="legend-summer-wnd">Spring/Summer Weekend</text>
-        </svg>
+
+        <div ><label class="switch">
+                <input type="checkbox" checked class="legend-summer-wd">
+                <span class="slider round summer-wd"></span>
+            </label> Spring/Summer Weekday</div>
+
+
+        <div ><label class="switch">
+            <input type="checkbox" checked class="legend-summer-wnd">
+            <span class="slider round summer-wnd"></span>
+        </label> Spring/Summer Weekend</div>
 
     </section>
     <br />

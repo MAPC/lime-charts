@@ -74,7 +74,7 @@ function setGraph(data, xDomain) {
     // 6. Y scale will use the randomly generate number 
     var yScale = d3.scaleLinear()
         .domain([0, .1]) // input 
-        .range([height, 0]); // output
+        .range([height-25, 0]); // output
 
     var svg = d3.select(".chart-3")
         .attr("width", width + margin.left + margin.right)
@@ -90,7 +90,7 @@ function setGraph(data, xDomain) {
 
     graph.append("g")
         .attr("class", "x-axis")
-        .attr("transform", "translate(0," + height + ")")
+        .attr("transform", "translate(0," + (height-25) + ")")
         .call(d3.axisBottom(xScale)
         )
         .selectAll("text")
@@ -150,7 +150,7 @@ function setGraph(data, xDomain) {
         .attr("x1", linePosition)
         .attr("x2", linePosition)
         .attr("y1", 0)
-        .attr("y2", height)
+        .attr("y2", height-25)
 
         tooltip.html("<span class='tooltip__title'>At approx. " + lengthBin.toFixed(2) + " miles:" + "</span>")
         .style('display', 'block')
@@ -177,6 +177,7 @@ function setGraph(data, xDomain) {
 function createLegend(){
     const legendEl = document.querySelector(".legend")
     legendEl.addEventListener("click", function(e){
+        console.log(e)
         switch(e.target.classList[0]) {
             case "legend-winter-wd":
                 toggleLine('.winter_wd')
