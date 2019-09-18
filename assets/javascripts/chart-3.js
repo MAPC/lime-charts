@@ -1,6 +1,6 @@
 const colors = ["#1b5eb8", "#0bbae9", "#5eb81b", "#ffca00"]
 
-d3.csv("/assets/data/chart-3.csv").then(function(data) {
+d3.csv("/assets/data/chart-3-m.csv").then(function(data) {
     const xDomain = data.map(row => +row.bin_center)
     const formattedData = [
         {
@@ -63,12 +63,9 @@ function setGraph(data, xDomain) {
     , height = 425 - margin.top - margin.bottom;
     
     var xScale = d3.scaleLinear()
-    .domain([0.1249082725, 6.150940827])
+    .domain([0, 9800])
     .range([0, width])
     .clamp(true)
-    // var xScale = d3.scaleBand()
-    // .domain(xDomain)
-    // .range(getRange(xDomain, width))
 
 
     console.log(getRange(xDomain, width))
@@ -97,10 +94,7 @@ function setGraph(data, xDomain) {
     graph.append("g")
         .attr("class", "x-axis")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale)
-        .tickFormat(d3.format(".3"))
-        .tickValues(xDomain)
-        )
+        .call(d3.axisBottom(xScale))
         .selectAll("text")
         .style("text-anchor", "end")
         .attr("dx", "-.8em")
@@ -131,8 +125,10 @@ function setGraph(data, xDomain) {
         .y(function(d) { return yScale(+d.proportion); })
 
     const classNames = ['winter_wd', 'winter_wnd', 'summer_wd', 'summer_wnd']
-    const rangeDict = getRange(xDomain, width).reverse()
+    const rangeDict = getRange(xDomain, width)
     
+    let numTicks = 49
+    let pixelInterval = xScale()
 
     graph.selectAll(".line")
     .data(data).enter()
@@ -144,42 +140,43 @@ function setGraph(data, xDomain) {
     .attr('d', line)
     .attr("class", function(d, i) { return classNames[i]});
 
-        let tipBox = graph.append('rect')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('opacity', 0)
-        .on('mousemove', function(d){
-            const xValue = d3.event.pageX - 70
-            const lengthBin = rangeDict.filter ( row => row.pixelWidth < xValue)[0].bin
-            const linePosition = rangeDict.filter ( row => row.pixelWidth < xValue)[0].pixelWidth - 11.1689889
-       
+    //rangeDict.map(row => console.log(row))
 
-        console.log(linePosition)
-            tooltipLine.attr("stroke", "black")
-            .attr("x1", linePosition)
-            .attr("x2", linePosition)
-            .attr("y1", 0)
-            .attr("y2", height)
-    
-            tooltip.html("At " + lengthBin.toFixed(2) + " miles:")
-            .style('display', 'block')
-            .style('left', d3.event.pageX + 20)
-            .style('top', d3.event.pageY - 20)
-            .selectAll()
-            .data(data).enter()
-            .append('div')
-            .style('color', d => d.color)
-            .html(function(d){
-                return d.lineName + ": " + (parseFloat(d.rideLengths.find(el => el.bin == lengthBin).proportion) * 100).toFixed(2) + "%"
-            })
-    
-            tooltip.style("left", (event.clientX + 20) + "px")
-            tooltip.style("top", (event.clientY) + "px");
+    let tipBox = graph.append('rect')
+    .attr('width', width)
+    .attr('height', height)
+    .attr('opacity', 0)
+    .on('mousemove', function(d){
+        const xPixelsAcross = d3.mouse(tipBox.node())[0]
+        const lengthBin = rangeDict.filter(function(row){ return xPixelsAcross <= +row.pixelWidth })[0].bin
+        const linePosition = rangeDict.filter ( row => xPixelsAcross <= +row.pixelWidth)[0].pixelWidth
+
+        tooltipLine.attr("stroke", "black")
+        .attr("x1", linePosition)
+        .attr("x2", linePosition)
+        .attr("y1", 0)
+        .attr("y2", height)
+
+        tooltip.html("At ")
+        .style('display', 'block')
+        .style('left', d3.event.pageX + 20)
+        .style('top', d3.event.pageY - 20)
+        .selectAll()
+        .data(data).enter()
+        .append('div')
+        .style('color', d => d.color)
+        .html(function(d){
+            //console.log(d)
+            return d.lineName + ": " + (parseFloat(d.rideLengths.find(el => el.bin == lengthBin).proportion) * 100).toFixed(2) + "%"
         })
-        .on('mouseout', function(d){
-            if (tooltip) tooltip.style('display', 'none');
-            if (tooltipLine) tooltipLine.attr('stroke', 'none');
-        })
+
+        tooltip.style("left", (event.clientX + 20) + "px")
+        tooltip.style("top", (event.clientY) + "px");
+    })
+    .on('mouseout', function(d){
+        if (tooltip) tooltip.style('display', 'none');
+        if (tooltipLine) tooltipLine.attr('stroke', 'none');
+    })
 
     //createLegend()
 }
