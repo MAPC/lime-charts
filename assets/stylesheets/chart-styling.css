@@ -1,5 +1,5 @@
 .tick > text {
-    font-size: 14px;
+    font-size: 10px;
 }
 
 .axis-label {
@@ -56,3 +56,12 @@
     fill: none;
     pointer-events: all;
 }
+
+/* .x-axis > .tick{
+    display: none;
+}
+
+*/
+/* .x-axis > .tick:nth-child(even){
+    display: none;
+}  */

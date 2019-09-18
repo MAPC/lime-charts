@@ -226,7 +226,6 @@ function setGraph(data) {
         tooltip.style("top", (event.clientY) + "px");
     })
     .on('mouseout', function(d){
-        console.log("out!")
         if (tooltip) tooltip.style('display', 'none');
         if (tooltipLine) tooltipLine.attr('stroke', 'none');
     })
@@ -236,9 +235,12 @@ function setGraph(data) {
     .attr('fill', 'none')
     .attr('stroke', d => d.color)
     .attr('stroke-width', 2)
-    .datum(d => d.timeData)
+    .datum(d => {
+        console.log(d.timeData)
+        return d.timeData})
     .attr('d', line)
     .attr("class", "line");
+
 
             
 

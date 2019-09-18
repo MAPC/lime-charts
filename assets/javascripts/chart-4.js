@@ -7,7 +7,6 @@ d3.csv("/assets/data/ele_assis_monthly_cnt_copy.csv").then(data => {
     var dataset = d3.stack()
         .keys(["ele_assis", "mechanical"])
 
-
     const quarterlyData = data.reduce(function(quarters,month) {
         let quarter = quarters.find(quarter => { return quarter.yr_qtr === month.yr_qtr })
         if (!quarter) {

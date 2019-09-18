@@ -1,13 +1,14 @@
 const colors = ["#1b5eb8", "#0bbae9", "#5eb81b", "#ffca00"]
 
 d3.csv("/assets/data/chart-3.csv").then(function(data) {
+    const xDomain = data.map(row => +row.bin_center)
     const formattedData = [
         {
             "lineName": "Fall/Winter Weekday",
             "color": colors[0],
             "rideLengths": data.map(row => {
                 return {
-                    "length": row.bin_center,
+                    "bin": row.bin_center,
                     "proportion": row.proportion_winter_wd
                 }
             })
@@ -17,7 +18,7 @@ d3.csv("/assets/data/chart-3.csv").then(function(data) {
             "color": colors[1],
             "rideLengths": data.map(row => {
                 return {
-                    "length": row.bin_center,
+                    "bin": row.bin_center,
                     "proportion": row.proportion_winter_wnd
                 }
             })
@@ -27,7 +28,7 @@ d3.csv("/assets/data/chart-3.csv").then(function(data) {
             "color": colors[2],
             "rideLengths": data.map(row => {
                 return {
-                    "length": row.bin_center,
+                    "bin": row.bin_center,
                     "proportion": row.proportion_summer_wd
                 }
             })
@@ -37,24 +38,40 @@ d3.csv("/assets/data/chart-3.csv").then(function(data) {
             "color": colors[3],
             "rideLengths": data.map(row => {
                 return {
-                    "length": row.bin_center,
+                    "bin": row.bin_center,
                     "proportion": row.proportion_summer_wnd
                 }
             })
         }
     ]
-    setGraph(formattedData)
+    setGraph(formattedData, xDomain)
 })
 
-function setGraph(data) {
-    var margin = {top: 50, right: 75, bottom: 50, left: 75}
-    , width = 600 - margin.left - margin.right
-    , height = 425 - margin.top - margin.bottom;
+function getRange(xDomain, width){
+    const max = xDomain[xDomain.length-1]
+    const xRange = xDomain.map(value => {
+        return {"pixelWidth": (+value * width)/max,
+                  "bin": value   
+        } 
+    })
+    return xRange
+}
 
-    // 5. X scale will use the index of our data
+function setGraph(data, xDomain) {
+    var margin = {top: 50, right: 75, bottom: 50, left: 75}
+    , width = 1200 - margin.left - margin.right
+    , height = 425 - margin.top - margin.bottom;
+    
     var xScale = d3.scaleLinear()
-        .domain([.1, 6.5]) // input
-        .range([0, width ]); // output
+    .domain([0.1249082725, 6.150940827])
+    .range([0, width])
+    //.range(getRange(xDomain, width))
+
+    console.log(getRange(xDomain, width))
+
+    var xInvert = d3.scaleOrdinal()
+    .domain(xScale.range())
+    .range(xScale.domain())
 
     // 6. Y scale will use the randomly generate number 
     var yScale = d3.scaleLinear()
@@ -70,13 +87,20 @@ function setGraph(data) {
         .attr("transform", `translate(135, 15)`)
     
     var graph = svg.append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .attr("transform", "translate(" + (margin.left) + "," + margin.top + ")")
         .attr("class","graph")
 
     graph.append("g")
-        .attr("class", "x axis")
+        .attr("class", "x-axis")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale))
+        .call(d3.axisBottom(xScale)
+        .tickFormat(d3.format(".3"))
+        .ticks(d3.ticks(49)))
+        .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-65)");
     
     svg.append("text")
         .text("Length (miles)")
@@ -93,23 +117,66 @@ function setGraph(data) {
         .attr("transform", `translate(25, 300) rotate(-90)`)
         .attr("class", "axis-label")
     
+    const tooltip = d3.select('.tooltip');
+    tooltip.style("display","none")
+    const tooltipLine = graph.append('line');
 
     const line = d3.line()
-        .x(function(d) { return xScale(+d.length); })
-        .y(function(d) { return yScale(d.proportion); })
+        .x(function(d) { return xScale(+d.bin); })
+        .y(function(d) { return yScale(+d.proportion); })
 
     const classNames = ['winter_wd', 'winter_wnd', 'summer_wd', 'summer_wnd']
-    graph.selectAll(".line")
-        .data(data).enter()
-        .append("path")
-        .attr('fill', 'none')
-        .attr('stroke', d => d.color)
-        .attr('stroke-width', 2)
-        .datum(d => d.rideLengths)
-        .attr('d', line)
-        .attr("class", function(d, i) { return classNames[i]});
+    const rangeDict = getRange(xDomain, width).reverse()
+    
 
-    createLegend()
+    graph.selectAll(".line")
+    .data(data).enter()
+    .append("path")
+    .attr('fill', 'none')
+    .attr('stroke', d => d.color)
+    .attr('stroke-width', 2)
+    .datum(d => d.rideLengths)
+    .attr('d', line)
+    .attr("class", function(d, i) { return classNames[i]});
+
+        let tipBox = graph.append('rect')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('opacity', 0)
+        .on('mousemove', function(d){
+            const xValue = d3.event.pageX - 60
+            const lengthBin = rangeDict.filter ( row => row.pixelWidth < xValue)[0].bin
+        //     console.log(rangeDict.filter ( row => row.pixelWidth < xValue)[0])
+        //    console.log(xValue)
+
+        console.log(lengthBin)
+            tooltipLine.attr("stroke", "black")
+            .attr("x1", xValue)
+            .attr("x2", xValue)
+            .attr("y1", 0)
+            .attr("y2", height)
+    
+            tooltip.html("At " + lengthBin.toFixed(2) + " miles:")
+            .style('display', 'block')
+            .style('left', d3.event.pageX + 20)
+            .style('top', d3.event.pageY - 20)
+            .selectAll()
+            .data(data).enter()
+            .append('div')
+            .style('color', d => d.color)
+            .html(function(d){
+                return d.lineName + ": " + (parseFloat(d.rideLengths.find(el => el.bin == lengthBin).proportion) * 100).toFixed(2) + "%"
+            })
+    
+            tooltip.style("left", (event.clientX + 20) + "px")
+            tooltip.style("top", (event.clientY) + "px");
+        })
+        .on('mouseout', function(d){
+            if (tooltip) tooltip.style('display', 'none');
+            if (tooltipLine) tooltipLine.attr('stroke', 'none');
+        })
+
+    //createLegend()
 }
 
 function createLegend(){
