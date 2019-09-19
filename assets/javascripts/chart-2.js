@@ -184,6 +184,13 @@ function setGraph(data) {
     .attr('height', height)
     .attr('opacity', 0)
     .on('mousemove', function(d){
+        let tooltipData;
+        if (d3.select('.weekday')._groups[0][0]){
+            tooltipData = weekdayData
+        } else {
+            tooltipData = weekendData
+        }
+     
         const time = xScale.invert(d3.mouse(tipBox.node())[0]).getHours()
         const tipTime = new Date(1900,0,1).setHours(time)
 
@@ -194,16 +201,18 @@ function setGraph(data) {
         .attr("y1", 0)
         .attr("y2", height)
 
-        tooltip.html("<span class='tooltip__title'>" + convertTime(time) + ", " + weekdayData[0].dayType + "</span>")
+        tooltip.html("<span class='tooltip__title'>" + convertTime(time) + ", " + tooltipData[0].dayType + "</span>")
         .style('display', 'block')
         .style('left', d3.event.pageX + 20)
         .style('top', d3.event.pageY - 20)
         .selectAll()
-        .data(weekdayData).enter()
+        .data(tooltipData).enter()
         .append('div')
         .html(function(d){
             const proportion = d.timeData.find(element => element.tod == convertTime(time)).proportion
-            return `<svg class='tooltip__circle'><circle r='5' fill=${d.color} transform='translate(5,9)'></cirlce> </svg>` + d.lineName + ': ' + (parseFloat(proportion) * 100).toFixed(2) + "%"
+            return `<svg class='tooltip__circle'><circle r='5' fill=${d.color} transform='translate(5,9)'></cirlce> </svg>`
+            + d.lineName + ': '
+            + (parseFloat(proportion) * 100).toFixed(2) + "%"
         })
 
         tooltip.style("left", (event.clientX + 20) + "px")
@@ -222,7 +231,7 @@ function setGraph(data) {
     .attr('stroke-width', 2)
     .datum(d => { return d.timeData })
     .attr('d', line)
-    .attr("class", "line");
+    .attr("class", "line weekday");
     
     toggleWeekday.addEventListener("click", function(e) {
         d3.select(".graph")
@@ -237,7 +246,7 @@ function setGraph(data) {
         .attr('stroke-width', 2)
         .datum(d => d.timeData)
         .attr('d', line)
-        .attr("class", "line");
+        .attr("class", "line weekday");
 
     })
 
@@ -254,7 +263,7 @@ function setGraph(data) {
         .attr('stroke-width', 2)
         .datum(d => d.timeData)
         .attr('d', line)
-        .attr("class", "line");
+        .attr("class", "line weekend");
 
     })
 
