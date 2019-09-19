@@ -60,8 +60,8 @@ function getRange(xDomain, width){
 
 function setGraph(data, xDomain) {
     const margin = {top: 50, right: 75, bottom: 50, left: 75}
-    , width = 600 - margin.left - margin.right
-    , height = 400 - margin.top - margin.bottom;
+    , width = 620 - margin.left - margin.right
+    , height = 420 - margin.top - margin.bottom;
     
     const xScale = d3.scaleLinear()
     .domain([0, 6.2])
@@ -70,24 +70,19 @@ function setGraph(data, xDomain) {
 
     const yScale = d3.scaleLinear()
     .domain([0, .1])
-    .range([height-25, 0])
+    .range([height, 0])
 
     const svg = d3.select(".chart-3")
-    .attr("width", width + margin.left)
-    .attr("height", height + margin.top + margin.bottom)
-    
-    // svg.append("text")
-    // .attr("class", "graph__title")
-    // .text("Trip Length by Season and Day of Week")
-    // .attr("transform", `translate(135, 15)`)
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + 25)
     
     const graph = svg.append("g")
-    .attr("transform", "translate(" + 75 + "," + margin.top + ")")
+    .attr("transform", "translate(" + 75 + "," + 10+ ")")
     .attr("class","graph")
 
     graph.append("g")
     .attr("class", "x-axis")
-    .attr("transform", "translate(0," + (height-25) + ")")
+    .attr("transform", "translate(0," + (height) + ")")
     .call(d3.axisBottom(xScale))
     .selectAll("text")
     .style("text-anchor", "end")
@@ -97,7 +92,7 @@ function setGraph(data, xDomain) {
     
     svg.append("text")
     .text("Length (miles)")
-    .attr("transform", `translate(250, ${(height + margin.top + 40)})`)
+    .attr("transform", `translate(250, ${(height + 70)})`)
     .attr("class", "axis-label")
 
     graph.append("g")
@@ -107,7 +102,7 @@ function setGraph(data, xDomain) {
 
     svg.append("text")
     .text("Percentage (%) of Trips")
-    .attr("transform", `translate(12, 300) rotate(-90)`)
+    .attr("transform", `translate(12, 250) rotate(-90)`)
     .attr("class", "axis-label")
     
     const tooltip = d3.select('.tooltip').style("display","none")
@@ -145,7 +140,7 @@ function setGraph(data, xDomain) {
         .attr("x1", linePosition)
         .attr("x2", linePosition)
         .attr("y1", 0)
-        .attr("y2", height-25)
+        .attr("y2", height)
 
         tooltip.html("<span class='tooltip__title'>At approx. " + lengthBin.toFixed(2) + " miles:" + "</span>")
         .style('display', 'block')
