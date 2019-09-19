@@ -1,7 +1,7 @@
 d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then(data => {
     const margin = {top: 50, right: 75, bottom: 50, left: 75}
-    , width = 700 - margin.left - margin.right
-    , height = 425 - margin.top - margin.bottom;
+    , width = 800 - margin.left - margin.right
+    , height = 420 - margin.top - margin.bottom;
 
     const seriesGen = d3.stack().keys(["ele_assis", "mechanical"])
 
@@ -47,11 +47,6 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then(data => {
     const svg = d3.select(".chart-4")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-    
-    svg.append("text")
-    .attr("class", "graph__title")
-    .text("E-Bike vs. Manual Bike Rides, Quarterly or Monthly")
-    .attr("transform", `translate(125, 15)`)
 
     const graph = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")

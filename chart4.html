@@ -7,18 +7,21 @@
     <title>E-Bike vs. Manual Bike Rides, Quarterly or Monthly</title>
     <link rel="stylesheet" href="/assets/stylesheets/chart-styling.css">
 </head>
-<body class="iframe__content">
-    <section class="legend">
-        <svg width="150" height="50">
-            <circle r="5" fill="#1b5eb8" transform="translate(10,10)" x="15" y="15"></circle>
-            <text transform="translate(20,15)">E-Bikes</text>
-            <circle r="5" fill="#5eb81b" transform="translate(10,30)"></circle>
-            <text transform="translate(20,35)">Mechanical Bikes</text>
-        </svg>
-        <br/><input type="radio" name="toggle" class="quarterly" checked> Quarterly
-        <br/><input type="radio" name="toggle" class="monthly"> Monthly
-    </section>
-    <svg class="chart-4"></svg>
+<body>
+    <main class="iframe__content">
+        <h2 class="graph__title">E-Bike vs. Manual Bike Rides, Quarterly or Monthly</h2>
+        <section class="legend__barchart">
+            <svg width="150" height="50">
+                <circle r="5" fill="#1b5eb8" transform="translate(10,10)" x="15" y="15"></circle>
+                <text transform="translate(20,15)">E-Bikes</text>
+                <circle r="5" fill="#5eb81b" transform="translate(10,30)"></circle>
+                <text transform="translate(20,35)">Mechanical Bikes</text>
+            </svg>
+            <br/><input type="radio" name="toggle" class="quarterly" checked> Quarterly
+            <br/><input type="radio" name="toggle" class="monthly"> Monthly
+        </section>
+        <svg class="chart-4"></svg>
+    </main>
     <script src="/assets/javascripts/d3.min.js"></script>
     <script src="/assets/javascripts/chart-4.js" type="module"></script> 
 </body>
