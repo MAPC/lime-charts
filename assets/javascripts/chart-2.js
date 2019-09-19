@@ -1,12 +1,12 @@
-d3.csv("/assets/data/tod_quarter_dow_copy.csv").then(function(data) {  
+d3.csv("/assets/data/tod_quarter_dow.csv").then(function(data) {  
     setGraph(data)
 })
 
 
 function setGraph(data) {
     const margin = {top: 50, right: 75, bottom: 50, left: 75}
-    , width = 700 - margin.left - margin.right
-    , height = 425 - margin.top - margin.bottom;
+    , width = 790 - margin.left - margin.right
+    , height = 415 - margin.top - margin.bottom;
     const colors = ["#1b5eb8", "#5eb81b", "#ffca00", "#e9770b", "#0bbae9"]
     const parseTime = d3.timeParse("%-I%p");
     const startTime = new Date(1900,0,1).setHours(0)
@@ -15,17 +15,12 @@ function setGraph(data) {
     const svg = d3.select(".chart-2")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-    
-    svg.append("text")
-    .attr("class", "graph__title")
-    .text("Hourly Pattern of Trips by Quarter on Weekdays or Weekends")
-    .attr("transform", `translate(75, 15)`)
 
     const graph= svg.append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    .attr("transform", "translate(" + margin.left + "," + 40 + ")")
     .attr("class","graph")
-    .attr("width", width)
-    .attr("height", height)
+    .attr("width", width - 15)
+    .attr("height", height - margin.top)
         
     const xScale = d3.scaleTime()
     .domain([startTime, endTime])
@@ -53,7 +48,7 @@ function setGraph(data) {
     
     svg.append("text")
     .attr("fill", "#000")
-    .attr("transform", "translate(15, 100) rotate(-90)")
+    .attr("transform", "translate(15, 115) rotate(-90)")
     .attr("text-anchor", "end")
     .text("Percentage (%) of Rides")
     .attr("class", "axis-label")
@@ -270,7 +265,7 @@ function createLegend(colors, width){
     const legend = d3.select(".chart-2").append("svg")
     .attr("class","legend")
     .attr("x", `${width + 25}`)
-    .attr("y", 40)
+    .attr("y", 10)
 
     legend.append("circle")
     .attr("fill", colors[0])

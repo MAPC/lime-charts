@@ -1,3 +1,21 @@
+.iframe__content {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 800px;
+}
+
+/* svg {
+  border: 1px solid red;
+} */
+
+iframe {
+  width: 800px;
+  height: 460px;
+}
+
 .tick > text {
     font-size: 14px;
 }
@@ -10,11 +28,13 @@
 .graph__title {
     font-size: 20px;
     font-weight: bold;
+    margin: 0 auto;
 }
 
-  .legend{
+.legend{
     position: absolute;
     margin: 50px 550px;
+    width: 225px;
 }
 .legend__title, .toggle__title{
     font-size: 16px;
@@ -68,9 +88,10 @@
 }
 
 form {
-    position: absolute;
-    margin: 200px 575px;
-    width: 100px;
+  position: absolute;
+  left: 677px;
+  top: 190px;
+  width: 100px;
 }
 
 
@@ -82,14 +103,12 @@ form {
     margin: 5px;
   }
   
-  /* Hide default HTML checkbox */
   .switch input {
     opacity: 0;
     width: 0;
     height: 0;
   }
-  
-  /* The slider */
+
   .slider {
     position: absolute;
     cursor: pointer;

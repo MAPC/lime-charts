@@ -61,7 +61,7 @@ function getRange(xDomain, width){
 function setGraph(data, xDomain) {
     const margin = {top: 50, right: 75, bottom: 50, left: 75}
     , width = 600 - margin.left - margin.right
-    , height = 425 - margin.top - margin.bottom;
+    , height = 400 - margin.top - margin.bottom;
     
     const xScale = d3.scaleLinear()
     .domain([0, 6.2])
@@ -73,16 +73,16 @@ function setGraph(data, xDomain) {
     .range([height-25, 0])
 
     const svg = d3.select(".chart-3")
-    .attr("width", width + margin.left + margin.right)
+    .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
     
-    svg.append("text")
-    .attr("class", "graph__title")
-    .text("Trip Length by Season and Day of Week")
-    .attr("transform", `translate(135, 15)`)
+    // svg.append("text")
+    // .attr("class", "graph__title")
+    // .text("Trip Length by Season and Day of Week")
+    // .attr("transform", `translate(135, 15)`)
     
     const graph = svg.append("g")
-    .attr("transform", "translate(" + (margin.left) + "," + margin.top + ")")
+    .attr("transform", "translate(" + 75 + "," + margin.top + ")")
     .attr("class","graph")
 
     graph.append("g")
@@ -97,7 +97,7 @@ function setGraph(data, xDomain) {
     
     svg.append("text")
     .text("Length (miles)")
-    .attr("transform", `translate(250, ${(height + margin.top + margin.bottom -5)})`)
+    .attr("transform", `translate(250, ${(height + margin.top + 40)})`)
     .attr("class", "axis-label")
 
     graph.append("g")
@@ -107,7 +107,7 @@ function setGraph(data, xDomain) {
 
     svg.append("text")
     .text("Percentage (%) of Trips")
-    .attr("transform", `translate(25, 300) rotate(-90)`)
+    .attr("transform", `translate(12, 300) rotate(-90)`)
     .attr("class", "axis-label")
     
     const tooltip = d3.select('.tooltip').style("display","none")
