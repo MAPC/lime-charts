@@ -1,6 +1,6 @@
-const colors = ["#1b5eb8", "#0bbae9", "#5eb81b", "#ffca00"]
+const colors = ["#1b5eb8", "#0bbae9", "#5eb81b", "#ffca00", "purple"]
 
-d3.csv("/assets/data/chart-3.csv").then(function(data) {
+d3.csv("/assets/data/summer_winter_wd_wnd_mile_histogram_bins_200m_thru_q3.csv").then(function(data) {
     const xDomain = data.map(row => +row.bin_center)
     const formattedData = [
         {

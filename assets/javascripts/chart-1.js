@@ -1,4 +1,4 @@
-d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
+d3.csv("/assets/data/ele_assis_monthly_cnt_thru_q3.csv").then( data => {
     var margin = {top: 50, right: 75, bottom: 50, left: 75}
     , width = 700 - margin.left - margin.right
     , height = 425 - margin.top - margin.bottom;
@@ -9,7 +9,7 @@ d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then( data => {
     
     let i = 0
     series.forEach(dataSet => {
-        dataSet.forEach(dataPint => {
+        dataSet.forEach(dataPoint => {
             if ( i < 2){
                 i++
             }

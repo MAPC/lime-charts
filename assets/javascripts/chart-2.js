@@ -1,4 +1,5 @@
-d3.csv("/assets/data/tod_quarter_dow.csv").then(function(data) {  
+d3.csv("/assets/data/tod_quarter_dow_thru_q3.csv").then(function(data) {
+    console.log(data)
     setGraph(data)
 })
 
@@ -7,7 +8,7 @@ function setGraph(data) {
     const margin = {top: 50, right: 75, bottom: 50, left: 75}
     , width = 790 - margin.left - margin.right
     , height = 415 - margin.top - margin.bottom;
-    const colors = ["#1b5eb8", "#5eb81b", "#ffca00", "#e9770b", "#0bbae9"]
+    const colors = ["#1b5eb8", "#5eb81b", "#ffca00", "#e9770b", "#0bbae9", "#710070"]
     const parseTime = d3.timeParse("%-I%p");
     const startTime = new Date(1900,0,1).setHours(0)
     const endTime = new Date(1900,0,1).setHours(23)
@@ -115,6 +116,17 @@ function setGraph(data) {
                     "proportion": tod.proportion_q2_2019_wd
                 }
             })   
+        },
+        {
+            "lineName": "Q3 2019",
+            "color": colors[5],
+            "dayType": "Weekday",
+            "timeData": data.map(tod => {
+                return {
+                    "tod": tod.tod,
+                    "proportion": tod.proportion_q3_2019_wd
+                }
+            })   
         }
     ]
 
@@ -171,6 +183,17 @@ function setGraph(data) {
                 return {
                     "tod": tod.tod,
                     "proportion": tod.proportion_q2_2019_wnd
+                }
+            })   
+        },
+        {
+            "lineName": "Q3 2019",
+            "color": colors[5],
+            "dayType": "Weekend",
+            "timeData": data.map(tod => {
+                return {
+                    "tod": tod.tod,
+                    "proportion": tod.proportion_q3_2019_wnd
                 }
             })   
         }
@@ -328,6 +351,17 @@ function createLegend(colors, width){
     legend.append("text")
     .attr("transform", "translate(20,135)")
     .text("Q2 2019")
+
+    ///
+
+    legend.append("circle")
+    .attr("fill", colors[5])
+    .attr("r",5)
+    .attr("transform", "translate(10,150)")
+
+    legend.append("text")
+    .attr("transform", "translate(20,155)")
+    .text("Q3 2019")
 }
 
 

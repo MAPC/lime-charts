@@ -1,4 +1,4 @@
-d3.csv("/assets/data/ele_assis_monthly_cnt.csv").then(data => {
+d3.csv("/assets/data/ele_assis_monthly_cnt_thru_q3.csv").then(data => {
     const margin = {top: 50, right: 75, bottom: 50, left: 75}
     , width = 800 - margin.left - margin.right
     , height = 420 - margin.top - margin.bottom;
