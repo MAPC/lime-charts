@@ -153,8 +153,8 @@ function setGraph(data, xDomain) {
             return `<svg class='tooltip__circle'><circle r='5' fill=${d.color} transform='translate(5,9)'></cirlce> </svg>` + d.lineName + ": " + (parseFloat(d.rideLengths.find(el => el.bin == lengthBin).proportion) * 100).toFixed(2) + "%"
         })
 
-        tooltip.style("left", (event.clientX + 20) + "px")
-        tooltip.style("top", (event.clientY) + "px");
+        tooltip.style("left", tooltipLeft(d3.event, document.getElementsByClassName('tooltip')[0]))
+        tooltip.style("top", tooltipTop(d3.event,  document.getElementsByClassName('tooltip')[0]));
     })
     .on('mouseout', function(d){
         if (tooltip) tooltip.style('display', 'none');
@@ -192,3 +192,19 @@ function toggleLine(elementClass){
         d3.select(elementClass).attr("visibility", "hidden")
     }
 }
+
+function tooltipLeft(event, tooltip){
+    if (event.pageX > 410) {
+      return event.pageX - tooltip.offsetWidth - 10 + "px"
+    } else {
+      return event.pageX + 10 + "px"
+    }
+  }
+  
+  function tooltipTop(event, tooltip){
+    if (event.pageY > 250) {
+      return event.pageY - tooltip.offsetHeight - 10 + "px"
+    } else {
+      return event.pageY + 10 + "px"
+    }
+  }

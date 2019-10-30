@@ -167,8 +167,8 @@ d3.csv("/lime-charts/assets/data/ele_assis_monthly_cnt_thru_q3.csv").then(data =
         tooltip.attr("width", "200")
         tooltip.attr("height", "200")
         tooltip.style("display", null)
-        tooltip.style("left", (event.clientX + 20) + "px")
-        tooltip.style("top", (event.clientY) + "px");
+        .style("left", tooltipLeft(d3.event, document.getElementsByClassName('tooltip')[0]))
+        .style("top", tooltipTop(d3.event,  document.getElementsByClassName('tooltip')[0]))
     })
     .on("mouseleave", function(d) { tooltip.style("display", "none") })
 
@@ -191,8 +191,8 @@ d3.csv("/lime-charts/assets/data/ele_assis_monthly_cnt_thru_q3.csv").then(data =
         tooltip.attr("width", "200")
         tooltip.attr("height", "200")
         tooltip.style("display", null)
-        tooltip.style("left", (event.clientX + 20) + "px")
-        tooltip.style("top", (event.clientY) + "px");
+        .style("left", tooltipLeft(d3.event, document.getElementsByClassName('tooltip')[0]))
+        .style("top", tooltipTop(d3.event,  document.getElementsByClassName('tooltip')[0]));
     })
     .on("mouseleave", function(d) { tooltip.style("display", "none") })
 
@@ -227,3 +227,19 @@ function monthlyToolTip(data) {
     + "<br />Mechanical bike rides: " + parseInt(data.mechanical).toLocaleString() + ` (${((data.mechanical / data.total_count) * 100).toFixed(0)}%)`
     + "<br />E-Bike rides: " + parseInt(data.ele_assis).toLocaleString() + ` (${((data.ele_assis / data.total_count) * 100).toFixed(0)}%)`
 }
+
+function tooltipLeft(event, tooltip){
+    if (event.pageX > 410) {
+      return event.pageX - tooltip.offsetWidth - 10 + "px"
+    } else {
+      return event.pageX + 10 + "px"
+    }
+  }
+  
+  function tooltipTop(event, tooltip){
+    if (event.pageY > 250) {
+      return event.pageY - tooltip.offsetHeight - 10 + "px"
+    } else {
+      return event.pageY + 10 + "px"
+    }
+  }
