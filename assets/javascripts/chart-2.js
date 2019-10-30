@@ -1,4 +1,4 @@
-d3.csv("/assets/data/tod_quarter_dow_thru_q3.csv").then(function(data) {
+d3.csv("/lime-charts/assets/data/tod_quarter_dow_thru_q3.csv").then(function(data) {
     setGraph(data)
 })
 
