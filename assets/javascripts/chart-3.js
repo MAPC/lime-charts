@@ -165,7 +165,7 @@ function setGraph(data, xDomain) {
 }
 
 function createLegend(){
-    const legendEl = document.querySelector(".legend")
+    const legendEl = document.querySelector(".legend__chart3")
     legendEl.addEventListener("click", function(e){
         switch(e.target.classList[0]) {
             case "legend-winter-wd":

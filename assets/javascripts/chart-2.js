@@ -1,5 +1,4 @@
 d3.csv("/assets/data/tod_quarter_dow_thru_q3.csv").then(function(data) {
-    console.log(data)
     setGraph(data)
 })
 
@@ -8,7 +7,7 @@ function setGraph(data) {
     const margin = {top: 50, right: 75, bottom: 50, left: 75}
     , width = 790 - margin.left - margin.right
     , height = 415 - margin.top - margin.bottom;
-    const colors = ["#1b5eb8", "#5eb81b", "#ffca00", "#e9770b", "#0bbae9", "#710070"]
+    const colors = ["#1b5eb8", "#5eb81b", "#ffca00", "#e9770b", "#0bbae9", "#006729"]
     const parseTime = d3.timeParse("%-I%p");
     const startTime = new Date(1900,0,1).setHours(0)
     const endTime = new Date(1900,0,1).setHours(23)
@@ -201,6 +200,7 @@ function setGraph(data) {
 
     const toggleWeekday = document.querySelector("input[value='weekday']")
     const toggleWeekend = document.querySelector("input[value='weekend']")
+    const classNames = ["q2-2018", "q3-2018", "q4-2018", "q1-2019", "q2-2019", "q3-2019"];
 
     let tipBox = graph.append('rect')
     .attr('width', width - margin.left + 15)
@@ -254,9 +254,15 @@ function setGraph(data) {
     .attr('stroke-width', 2)
     .datum(d => { return d.timeData })
     .attr('d', line)
-    .attr("class", "line weekday");
+    .attr('visibility', 'visible')
+    .attr("class", function(d, i) { return "line weekday " + classNames[i]});
     
     toggleWeekday.addEventListener("click", function(e) {
+        const visibleLines =  Array.from(d3.select(".graph")
+        .selectAll(".line")
+        ._groups[0])
+        const visibilityArray = visibleLines.map(line => line.getAttribute("visibility"))
+        
         d3.select(".graph")
         .selectAll(".line")
         .remove()
@@ -269,11 +275,17 @@ function setGraph(data) {
         .attr('stroke-width', 2)
         .datum(d => d.timeData)
         .attr('d', line)
-        .attr("class", "line weekday");
+        .attr('visibility', function(d, i) { return visibilityArray[i]})
+        .attr("class", function(d, i) { return "line weekday " + classNames[i]});
 
     })
 
     toggleWeekend.addEventListener("click", function(e) {
+        const visibleLines =  Array.from(d3.select(".graph")
+        .selectAll(".line")
+        ._groups[0])
+        const visibilityArray = visibleLines.map(line => line.getAttribute("visibility"))
+        
         d3.select(".graph")
         .selectAll(".line")
         .remove()
@@ -286,88 +298,50 @@ function setGraph(data) {
         .attr('stroke-width', 2)
         .datum(d => d.timeData)
         .attr('d', line)
-        .attr("class", "line weekend");
-
+        .attr('visibility', function(d, i) { return visibilityArray[i]})
+        .attr("class", function(d, i) { return "line weekend " + classNames[i]});
     })
-
-    createLegend(colors, width)
+    activateLegend();
 }
-
-function createLegend(colors, width){
-    const legend = d3.select(".chart-2").append("svg")
-    .attr("class","legend")
-    .attr("x", `${width + 25}`)
-    .attr("y", 10)
-
-    legend.append("circle")
-    .attr("fill", colors[0])
-    .attr("r",5)
-    .attr("transform", "translate(10,50)")
-
-    legend.append("text")
-    .attr("transform", "translate(20,55)")
-    .text("Q2 2018")
-
-    ///
-
-    legend.append("circle")
-    .attr("fill", colors[1])
-    .attr("r",5)
-    .attr("transform", "translate(10,70)")
-
-    legend.append("text")
-    .attr("transform", "translate(20,75)")
-    .text("Q3 2018")
-
-    ///
-
-    legend.append("circle")
-    .attr("fill", colors[2])
-    .attr("r",5)
-    .attr("transform", "translate(10,90)")
-
-    legend.append("text")
-    .attr("transform", "translate(20,95)")
-    .text("Q4 2018")
-
-    ///
-
-    legend.append("circle")
-    .attr("fill", colors[3])
-    .attr("r",5)
-    .attr("transform", "translate(10,110)")
-
-    legend.append("text")
-    .attr("transform", "translate(20,115)")
-    .text("Q1 2019")
-
-    ///
-
-    legend.append("circle")
-    .attr("fill", colors[4])
-    .attr("r",5)
-    .attr("transform", "translate(10,130)")
-
-    legend.append("text")
-    .attr("transform", "translate(20,135)")
-    .text("Q2 2019")
-
-    ///
-
-    legend.append("circle")
-    .attr("fill", colors[5])
-    .attr("r",5)
-    .attr("transform", "translate(10,150)")
-
-    legend.append("text")
-    .attr("transform", "translate(20,155)")
-    .text("Q3 2019")
-}
-
 
 function convertTime(hour){
     if (hour === 0) { return "12AM"}
     else if (hour < 12 ) { return hour+"AM" }
     else if (hour === 12 ) { return "12PM"}
     else if (hour > 12) { return hour%12+"PM"}
+}
+
+function toggleLine(elementClass){
+    const selection = document.querySelector(elementClass)
+    if (selection.getAttribute("visibility") === "hidden"){
+        d3.select(elementClass).attr("visibility", "visible")
+    } else {
+        d3.select(elementClass).attr("visibility", "hidden")
+    }
+}
+
+function activateLegend(){
+    const legendEl = document.querySelector(".legend__chart2")
+    legendEl.addEventListener("click", function(e){
+        switch(e.target.classList[0]) {
+            case "legend-q2-2018":
+                toggleLine('.q2-2018')
+                break
+            case "legend-q3-2018":
+                toggleLine('.q3-2018')
+                break
+            case "legend-q4-2018":
+                toggleLine('.q4-2018')
+                break
+            case "legend-q1-2019":
+                toggleLine('.q1-2019')
+                break
+            case "legend-q2-2019":
+                toggleLine('.q2-2019')
+                break
+            case "legend-q3-2019":
+                toggleLine('.q3-2019')
+                break
+        }
+    })
 }

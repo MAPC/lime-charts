@@ -11,25 +11,56 @@ iframe {
 }
 
 .tick > text {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .axis-label {
-    font-size: 16px;
-    font-weight: bold;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .graph__title {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 0 auto;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 auto;
 }
 
-.legend{
-    position: absolute;
-    left: 580px;
-    top: 50px;
-    width: 225px;
+.legend__chart3{
+  position: absolute;
+  left: 580px;
+  top: 50px;
+  width: 225px;
+}
+
+.legend__chart2 {
+  position: absolute;
+  left: 670px;
+  top: 50px;
+  width: 225px;
+}
+
+input:checked + .legend-q2-2018 {
+  background-color: #1b5eb8;
+}
+
+input:checked + .legend-q3-2018 {
+  background-color: #5eb81b;
+}
+
+input:checked + .legend-q4-2018 {
+  background-color: #ffca00;
+}
+
+input:checked + .legend-q1-2019 {
+  background-color: #e9770b;
+}
+
+input:checked + .legend-q2-2019 {
+  background-color: #0bbae9;
+}
+
+input:checked + .legend-q3-2019 {
+  background-color: #006729;
 }
 
 .legend__barchart {
